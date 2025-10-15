@@ -126,7 +126,8 @@ button.btn-disabled {
     color: white;
 }
 
-.help-box > * {
+.help-box > ul,
+.help-box > ol {
     display: flex;
     flex-direction: column;
     gap: 12px;
