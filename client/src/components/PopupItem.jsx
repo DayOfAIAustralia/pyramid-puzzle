@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from 'react'
 import { TutorialContext, LevelContext } from './Context'
 import axios from "axios"
 import useSound from 'use-sound';
+import Markdown from 'react-markdown'
 
 import swooshSound from '../assets/sounds/swoosh.wav'
 
@@ -88,11 +89,10 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     }
 
     async function requestHelp(data) {
-        const host = import.meta.env.VITE_HOST;
         setHelpVisible(true)
         setHelpDisabled(true)
-        const response = await axios.post(`${host}/requesthelp`, {data: data})
-        setHelpData(response.data)
+        const response = await axios.post(`/api/requesthelp`, {data: data}, { withCredentials: false })
+        setHelpData(response.data.text)
     }
 
     function closeHelp() {
@@ -127,7 +127,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                     {helpData ?
                     <>
                         <h2>AI Help:</h2>
-                        <p>{helpData}</p>
+                        <Markdown>{helpData.replace(/\n/g, "  \n")}</Markdown>
                         <div className="popup-btns" >
                             <button onClick={closeHelp}>Close</button>
 

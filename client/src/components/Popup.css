@@ -102,7 +102,7 @@ button.btn-disabled {
 
 }
 
-.popup-help  > img {
+.popup-help > img {
     width: 100%;
     height: 100%;
 
@@ -116,6 +116,7 @@ button.btn-disabled {
     align-items: center;
     width: 50%;
     padding-block: 8px;
+    gap: 12px;
     margin-inline: 12px;
     background-color: rgb(48, 47, 51);
     border-radius: 10px;
@@ -123,4 +124,10 @@ button.btn-disabled {
     padding-inline: 30px;
 
     color: white;
+}
+
+.help-box > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
