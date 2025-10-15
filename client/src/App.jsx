@@ -45,12 +45,6 @@ function App() {
 
   const [currentlyPlaying, setCurrentlyPlaying] = useState(false)
 
-  const [speaksChinese, setSpeaksChinese] = useState(false)
-
-  const [startAPICall, setStartAPICall] = useState(false)
-
-  const [appliedFetchedOnce, setAppliedFetchedOnce] = useState(false)
-
   const [startUpdate, setStartUpdate] = useState(false)
 
   const [orderAnswer, setOrderAnswer] = useState([
@@ -82,8 +76,7 @@ function App() {
 
   return (
     <>
-      <LevelContext value={{level: [level, setLevel], dialogue: [dialogue, setDialogue], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], speaksChinese: [speaksChinese, setSpeaksChinese], startAPICall: [startAPICall, setStartAPICall], startUpdate: [startUpdate, setStartUpdate],
-        fetched: [appliedFetchedOnce, setAppliedFetchedOnce]
+      <LevelContext value={{level: [level, setLevel], dialogue: [dialogue, setDialogue], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate]
       }}>
         <Popups orderAnswerArr={[orderAnswer, setOrderAnswer]}/>
         <ChineseRoom />

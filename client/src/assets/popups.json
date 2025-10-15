@@ -2,17 +2,17 @@
     {
         "popups": [
             {
-                "text": "Welcome to the Chinese Room! Please let me know if you can already read Chinese. If you can, it makes this game ineffective! If so, the symbols will be swapped to the Greek alphabet. Don't worry if this doesn't make sense just yet!",
+                "text": "Welcome to the Heiroglyphics Room! ",
                 "buttons": [
                     {   
                         "id": 1,
-                        "text": "I can read Chinese",
-                        "goto": 12
+                        "text": "Great to be here",
+                        "goto": 1
                     },
                     {
                         "id": 2,
-                        "text": "I cannot read Chinese",
-                        "goto": 13
+                        "text": "What is this place?",
+                        "goto": 1
                     }
                 ]
             },
@@ -144,28 +144,6 @@
                     }
                 ],
                 "actions": 9
-            },
-            {
-                "text": "谢谢! Now, continuing to the experience...",
-                "buttons": [
-                    {
-                        "id": 1,
-                        "text": "So, what is the Chinese Room?",
-                        "goto": 1
-                    }
-                ],
-                "actions": 7
-            },
-            {
-                "text": "Thank you! Now, continuing to the experience...",
-                "buttons": [
-                    {
-                        "id": 1,
-                        "text": "So, what is the Chinese Room?",
-                        "goto": 1
-                    }
-                ],
-                "actions": 8
             }
         ]
     },

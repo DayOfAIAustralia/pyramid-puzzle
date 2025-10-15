@@ -9,20 +9,12 @@ import swooshSound from '../assets/sounds/swoosh.wav'
 export default function PopupItem({text, buttons, updateDialogue, actions, orderAnswerArr, help=false}) {
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
     const [isTutorial, setIsTutorial] = useContext(TutorialContext)
+    const [startUpdate, setStartUpdate] = useContext(LevelContext).startUpdate
     const [position, setPosition] = useState({})
     const [helpVisible, setHelpVisible] = useState(false)
     const [helpData, setHelpData] = useState('')
     const [helpDisabled, setHelpDisabled] = useState(false)
     const [playSwoosh] = useSound(swooshSound)
-    const [speaksChinese, setSpeaksChinese] = useContext(LevelContext).speaksChinese
-    const [startAPICall, setStartAPICall] = useContext(LevelContext).startAPICall
-    const [appliedFetchedOnce, setAppliedFetchedOnce] = useContext(LevelContext).fetched;
-    const [startUpdate, setStartUpdate] = useContext(LevelContext).startUpdate;
-    const [key, setKey] = useState(0)
-
-    useEffect(() => {
-        setKey(prev => prev + 1);
-    }, [appliedFetchedOnce])
 
     useEffect(() => {
         if (actions === -1) {
@@ -64,11 +56,9 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
         } else if (actions === 6) {
             setPosition({top: "30%", left: "auto", right: "0", bottom: "auto"})
         } else if (actions === 7) {
-            setSpeaksChinese(true)
-            setStartAPICall(true)
+            // removed
         } else if (actions === 8) {
-            setSpeaksChinese(false)
-            setStartAPICall(true)
+            // removed
         } else if (actions === 9) {
             setStartUpdate(true)
         }
@@ -118,13 +108,13 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
     return (
         <div className="popup" key={'dialogue-box'} style={popupStyle}>
-            <section className="popup-data" style={dataStyle} key={key}>
+            <section className="popup-data" style={dataStyle}>
                 <div className="popup-text">
                     {text}
 
                 </div>
                 <div className={`popup-btns ${btnClass}`}>
-                    {(appliedFetchedOnce || buttons[0].goto != null) ? buttonElements : <div>Please wait for loading to complete...</div>}
+                    {buttonElements}
                 </div>
                 {help &&
                 <button className="popup-help" onClick={() => requestHelp(text)} disabled={helpDisabled}>

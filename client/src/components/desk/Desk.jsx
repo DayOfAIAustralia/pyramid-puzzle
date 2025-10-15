@@ -35,17 +35,6 @@ const orderAnswerContainer = {
     PAPERCONTAINER: 5
 }   
 
-// Used to toggle api
-const useAPI = false;
-
-let fetchedOnce = import.meta.hot?.data?.fetchedOnce ?? false;
-if (import.meta.hot) {
-    import.meta.hot.dispose((data) => {
-        data.fetchedOnce = fetchedOnce; // save on module replacement
-    });
-}
-
-
 export default function Desk({orderAnswerArr}) {
     const [playSpin] = useSound(spinSound)
     const [playRuffle] = useSound(paperRuffleSound)
@@ -55,36 +44,106 @@ export default function Desk({orderAnswerArr}) {
     const [playTile] = useSound(tileSound)
     const [playHorn] = useSound(hornSound)
 
-    const [fetchedData, setFetchedData] = React.useState(null)
     const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
-    const [appliedFetchedOnce, setAppliedFetchedOnce] = React.useContext(LevelContext).fetched;
     const [currentlyPlaying, setCurrentlyPlaying] = React.useContext(LevelContext).currentlyPlaying
     const [level, setLevel] = React.useContext(LevelContext).level
-    const [speaksChinese, setSpeaksChinese] = React.useContext(LevelContext).speaksChinese
-    const [startAPICall, setStartAPICall] = React.useContext(LevelContext).startAPICall
     const [wheelPresent, setWheelPresent] = React.useState(false)
     const [wheelData, setWheelData] = React.useState({})
     const [winningNumber, setWinningNumber] = React.useState()
     const consideredRule = React.useRef()
     const [mustSpin, setMustSpin] = React.useState(false)
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
-    const [characters, setCharacters] = React.useState([{
+    const [characters, setCharacters] = React.useState([
+    {
         id: "dictionary",
         items: [
-            {"id":"1","character":"𓃾"},
-            {"id":"2","character":"𓆓"},
-            {"id":"3","character":"𓉐"},
-            {"id":"3","character":"𓊽"}
+        {"id":"1","character":"𓀀"},
+        {"id":"2","character":"𓁹"},
+        {"id":"3","character":"𓂀"},
+        {"id":"4","character":"𓂝"},
+        {"id":"5","character":"𓂧"},
+        {"id":"6","character":"𓂻"},
+        {"id":"7","character":"𓃭"},
+        {"id":"8","character":"𓃹"},
+        {"id":"9","character":"𓃾"},
+        {"id":"10","character":"𓃒"},
+        {"id":"11","character":"𓅃"},
+        {"id":"12","character":"𓅓"},
+        {"id":"13","character":"𓅱"},
+        {"id":"14","character":"𓅨"},
+        {"id":"15","character":"𓆓"},
+        {"id":"16","character":"𓆤"},
+        {"id":"17","character":"𓆣"},
+        {"id":"18","character":"𓆛"},
+        {"id":"19","character":"𓆰"},
+        {"id":"20","character":"𓆼"},
+        {"id":"21","character":"𓇋"},
+        {"id":"22","character":"𓇳"},
+        {"id":"23","character":"𓇼"},
+        {"id":"24","character":"𓈖"},
+        {"id":"25","character":"𓈗"},
+        {"id":"26","character":"𓈟"},
+        {"id":"27","character":"𓉐"},
+        {"id":"28","character":"𓊖"},
+        {"id":"29","character":"𓊏"},
+        {"id":"30","character":"𓊪"},
+        {"id":"31","character":"𓋹"},
+        {"id":"32","character":"𓊽"},
+        {"id":"33","character":"𓎼"},
+        {"id":"34","character":"𓌟"},
+        {"id":"35","character":"𓍿"},
+        {"id":"36","character":"𓌳"},
+        {"id":"37","character":"𓌰"},
+        {"id":"38","character":"𓋴"},
+        {"id":"39","character":"𓎛"},
+        {"id":"40","character":"𓏏"},
+        {"id":"41","character":"𓏠"},
+        {"id":"42","character":"𓏲"},
+        {"id":"43","character":"𓏛"},
+        {"id":"44","character":"𓀭"},
+        {"id":"45","character":"𓁐"},
+        {"id":"46","character":"𓄿"},
+        {"id":"47","character":"𓅆"},
+        {"id":"48","character":"𓅨"},
+        {"id":"49","character":"𓆙"},
+        {"id":"50","character":"𓆟"},
+        {"id":"51","character":"𓇯"},
+        {"id":"52","character":"𓈌"},
+        {"id":"53","character":"𓉻"},
+        {"id":"54","character":"𓊃"},
+        {"id":"55","character":"𓋔"},
+        {"id":"56","character":"𓌄"},
+        {"id":"57","character":"𓊽"},
+        {"id":"58","character":"𓎛"},
+        {"id":"59","character":"𓏐"},
+        {"id":"60","character":"𓐍"}
         ]
-        },
-        {
+    },
+    {
         id: "paper",
         items: []
-    }])
+    }
+    ])
 
     const [rules, setRules] = React.useState({
         inactive: [
-        ],
+            { id: 1, order: "𓂀𓏐𓈖", answer: "𓆓𓃾𓆣" },
+            { id: 2, order: "𓇋𓏏𓋹", answer: "𓆤𓆣𓇯" },
+            { id: 3, order: "𓃹𓉐𓏠", answer: "𓂧𓀀𓆛" },
+            { id: 4, order: "𓆼𓂝𓈟", answer: "𓇯𓆰" },
+            { id: 5, order: "𓂻𓈗𓅓", answer: "𓄿𓁹𓅨" },
+            { id: 6, order: "𓆣𓅃𓆟", answer: "𓎛𓏲𓏐" },
+            { id: 7, order: "𓈌𓊪𓌟", answer: "𓋴𓀭𓇳" },
+            { id: 8, order: "𓅱𓉻𓎼", answer: "𓍿𓏛𓊽" },
+            { id: 9, order: "𓊏𓌳𓋔", answer: "𓇳𓏐𓈟" },
+            { id: 10, order: "𓎛𓊃𓏏", answer: "𓌰𓀁𓇋" },
+            { id: 11, order: "𓇼𓆛𓅨", answer: "𓏏𓌄𓉐" },
+            { id: 12, order: "𓆰𓊖𓍋", answer: "𓈗𓇯𓋹" },
+            { id: 13, order: "𓇋𓂀𓆼", answer: "𓉐𓋴𓆤" },
+            { id: 14, order: "𓅓𓎼𓀀", answer: "𓌰𓊽𓏐" },
+            { id: 15, order: "𓊪𓃾𓇳", answer: "𓆓𓋹𓇋" },
+            { id: 16, order: "𓉻𓅱𓇯", answer: "𓂝𓏐𓆛" }
+            ],
         active: [
             {
                 id: 6,
@@ -94,22 +153,6 @@ export default function Desk({orderAnswerArr}) {
         ]
     })
 
-    const fetchAPI = async () => {
-        const host = import.meta.env.VITE_HOST;
-        const language = speaksChinese ? "Greek" : "Chinese"
-        const response = await axios.get(`${host}/initialise`, {params: {symbol: language}})
-        setFetchedData(response)
-        console.log("received data")
-    }
-
-    React.useEffect(() => {
-        if (!fetchedOnce && useAPI && startAPICall) {
-            fetchedOnce = true;
-            if (import.meta.hot) import.meta.hot.data.fetchedOnce = true;
-            fetchAPI()
-            console.log("called api")
-        }
-    }, [startAPICall])
 
     function shuffle(array) {
         let currentIndex = array.length;
@@ -127,45 +170,19 @@ export default function Desk({orderAnswerArr}) {
     }
 
     React.useEffect(() => {
-        if (!fetchedData) return
-        if (!useAPI) return
         if (!startUpdate) return
-        if (appliedFetchedOnce) return
         const seen = new Set();
-        setCharacters(prev => {
-            return prev.map(c => {
-                if (c.id === 'paper') return c
-                const shuffledRules = [...fetchedData.data.rules]
-                shuffle(shuffledRules)
-                const items = shuffledRules.map(rule => {
-                    const shuffledAnswer = rule.answer.split('')
-                    shuffle(shuffledAnswer)
-                    return shuffledAnswer.filter(char => {
-                        if (!seen.has(char)) {
-                            seen.add(char)
-                            return true
-                        } else return false         
-                    })
-                })
-                return {
-                    ...c,
-                    items: items.flat().map((char, index) => {return {id: index, character: char}})
-                }
+        // Removes tutorial example
+        setRules(prev => {
+            return {inactive: prev.inactive, active: []}
         })
-        })
+        moveInactiveRulesToActive()    
         
-        setRules({
-            inactive: fetchedData.data.rules.slice(4),
-            active: fetchedData.data.rules.slice(0,4),
-        });
-        // starting order
-        setAppliedFetchedOnce(true);
-    }, [startUpdate, fetchedData, appliedFetchedOnce]);
+    }, [startUpdate]);
 
     React.useEffect(() => {
-        if (appliedFetchedOnce && currentlyPlaying === true) {
+        if (currentlyPlaying === true) {
             generateNewOrder()
-
         }
     }, [currentlyPlaying])
 
@@ -209,6 +226,10 @@ export default function Desk({orderAnswerArr}) {
 
     React.useEffect(() => {
         if (level.level === 0) return;
+        moveInactiveRulesToActive()
+    }, [level.level])
+
+    function moveInactiveRulesToActive() {
         setRules(prev => {
             const count = Math.min(4, prev.inactive.length);
             const take = prev.inactive.slice(0, count)
@@ -228,7 +249,7 @@ export default function Desk({orderAnswerArr}) {
                 }
             }
         })
-    }, [level.level])
+    }
 
     function updateRule(order) {
         let data = [];
