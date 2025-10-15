@@ -32,7 +32,7 @@
                 ]
             },
             {
-                "text": "Your job here is to act as the worker in the Chinese Room. You will receive a message written in Chinese from the outside, and your job is to use the dictionary and rulebook provided to create the right response, and sent that back outside. Make sense?",
+                "text": "You're a new intern in the Heiroglyph Translation Department in the University of New South Wale's Egyptology deparment. You've been sent to Egypt to help translate these ancient messages! You will receive a message written in Heiroglyphs from the outside, and your job is to use the dictionary and rulebook provided to create the right response, and send that back outside. Make sense?",
                 "buttons": [
                     {
                         "id": 1,
@@ -151,7 +151,7 @@
         "popups": [
         {
             "id": 0,
-            "text": "Congratulations, you're doing an excellent job so far! Just one question for you, do you feel like doing this is teaching you to better understand Chinese?",
+            "text": "Congratulations, you're doing an excellent job so far! Just one question for you, do you feel like doing this is teaching you to understand Heiroglyphs?",
             "buttons": [
                 { "id": 1, "text": "Yes", "goto": 1 },
                 { "id": 2, "text": "No", "goto": 3 }
@@ -159,7 +159,7 @@
             },
             {
             "id": 1,
-            "text": "Really? So if someone texted you in Chinese right now, with one of the rules in that rulebook, could you intelligently respond?",
+            "text": "Really? So if someone texted you using Heiroglyphs right now, with one of the rules in that rulebook, could you intelligently respond?",
             "buttons": [
                 { "id": 1, "text": "Yes", "goto": 2 },
                 { "id": 2, "text": "No", "goto": 3 }
@@ -190,7 +190,7 @@
             },
             {
             "id": 5,
-            "text": "That's right! Your rulebook is telling you exactly how to construct an output given an input, but there's nothing there that teaches you why a given output should occur from those inputs. Or is there? Do you think with enough time and enough rules you would be able to fully understand Chinese?",
+            "text": "That's right! Your rulebook is telling you exactly how to construct an output given an input, but there's nothing there that teaches you why a given output should occur from those inputs. Or is there? Do you think with enough time and enough rules you would be able to fully understand Heiroglyphics?",
             "buttons": [
                 { "id": 1, "text": "Yes", "goto": 7 },
                 { "id": 2, "text": "No", "goto": 7 }
@@ -199,7 +199,7 @@
             },
             {
             "id": 6,
-            "text": "Not quite, that would mean you understand the meaning behind all the characters your placing. But in your case you understand how to place them in the correct order, the syntax, but there's nothing there that teaches you why you should be placing them in that order, the semantics. Or is there? Do you think with enough time and enough rules you would be able to fully understand Chinese?",
+            "text": "Not quite, that would mean you understand the meaning behind all the characters your placing. But in your case you understand how to place them in the correct order, the syntax, but there's nothing there that teaches you why you should be placing them in that order, the semantics. Or is there? Do you think with enough time and enough rules you would be able to fully understand Heiroglyphics?",
             "buttons": [
                 { "id": 1, "text": "Yes", "goto": 7 },
                 { "id": 2, "text": "No", "goto": 7 }
@@ -208,7 +208,7 @@
             },
             {
             "id": 7,
-            "text": "Well that's the interesting thing. Because from the outside you would appear to understand Chinese. Any native speaker can ask you any question and you would have the ability to say the right thing. Whether Geography, History, or Math, they could ask you a question and you could say the right thing. But you would never be able to know what your saying.",
+            "text": "Well that's the interesting thing. Because from the outside you would appear to understand Heiroglpyhs. Anyone who knew how to read and write them can ask you any question and you would have the ability to respond the right thing. Whether Geography, History, or Math, they could ask you a question and you could respond. But you would never be able to know what your saying.",
             "buttons": [
                 { "id": 1, "text": "Okay, but what's your point", "goto": 8 }
             ],
@@ -228,7 +228,7 @@
         "popups": [
             {
             "id": 0,
-            "text": "So, how was that, do you understand Chinese any better now?",
+            "text": "So, how was that, do you understand Heiroglyphics any better now?",
             "buttons": [
                 { "id": 1, "text": "Of course", "goto": 1 },
                 { "id": 2, "text": "Of course not", "goto": 2 }
@@ -252,7 +252,7 @@
             },
             {
             "id": 3,
-            "text": "As I mentioned previously, like you right now, computers are just highly complicated symbol manipulation machines. At the most basic level, they are given a series of inputs, represented as either 1 or 0. Then, based on the program it's been given, it creates a new series of 1's and 0's to send back out. At a high level, this process may be interpreted by us as music, video, colour, or any number of other meaningful things. But to the computer, it's just moving around 1's and 0's, exactly the same way as to you in the Chinese Room, you're just moving around characters.",
+            "text": "As I mentioned previously, like you right now, computers are just highly complicated symbol manipulation machines. At the most basic level, they are given a series of inputs, represented as either 1 or 0. Then, based on the program it's been given, it creates a new series of 1's and 0's to send back out. At a high level, this process may be interpreted by us as music, video, colour, or any number of other meaningful things. But to the computer, it's just moving around 1's and 0's, exactly the same way as you in the Heiroglyphics room, you're just moving around characters.",
             "buttons": [
                 { "id": 1, "text": "But can't the system learn the meaning?", "goto": 4 }
             ],
@@ -288,7 +288,7 @@
         },
         {
         "id": 1,
-        "text": "Precisely right, each generation was just a random series of Chinese characters. But I promise that there is a connection here to AI.",
+        "text": "Precisely right, each generation was just a random series of Heiroglyphs. But I promise that there is a connection here to AI.",
         "buttons": [
             { "id": 1, "text": "Ok, what is it", "goto": 3 }
         ]
@@ -326,7 +326,7 @@
         },
         {
         "id": 6,
-        "text": "That's the scary thing, we don't know. They do so through Neural Networks, which aim to mimic the brain, but the methods that they come up with to create their answers are incomprehensible to scientists. However, what we do know is that at the most fundamental level they are still dealing with the same 1's and 0's that the computer running the hard-coded program is dealing with. For all their power, they cannot escape their hardware. The same as humans are constrained to their biology. You, in the Chinese Room, cannot think yourself into understanding Chinese, the same as the computer cannot “think” itself into understanding the meaning behind its flipping of 1's and 0's.",
+        "text": "That's the scary thing, we don't know. They do so through Neural Networks, which aim to mimic the brain, but the methods that they come up with to create their answers are incomprehensible to scientists. However, what we do know is that at the most fundamental level they are still dealing with the same 1's and 0's that the computer running the hard-coded program is dealing with. For all their power, they cannot escape their hardware. The same as humans are constrained to their biology. You, in the Heiroglyphics Room, cannot think yourself into understanding these symbols, the same as the computer cannot “think” itself into understanding the meaning behind its flipping of 1's and 0's.",
         "buttons": [
             { "id": 1, "text": "So where does that leave us", "goto": 7 }
         ],

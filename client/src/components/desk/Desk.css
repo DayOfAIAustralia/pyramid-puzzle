@@ -326,8 +326,9 @@
 
 .draggable {
     padding: 4px;
-    width: auto;
-    height: min-content;
+    width: 16px;
+    text-align: center;
+    height: auto;
     background-color: rgb(245, 245, 220);
     border: 1px solid black;
     cursor: grab;
