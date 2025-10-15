@@ -91,8 +91,8 @@
 }
 
 .paper {
-    background-image: url("/paper.png");
-    background-size: cover;
+    background-image: url("/slip.png");
+    background-size: 100% 100%;
     width: 29vh;
     height: auto;
     padding: 20px;
@@ -100,7 +100,7 @@
     cursor: grab;
 
     font-size: 20px;
-    transition: transform 0.5s ease; /* be specific */
+    transition: transform 0.5s ease; 
 
 
 }
@@ -194,7 +194,8 @@
     padding: 2vh;
 
     background-image: url("/paper.png");
-    background-size: cover; 
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 
     display: flex;
     gap: 12px;
@@ -215,7 +216,7 @@
 
 .workspace:has(.paper-furl-btn:hover) {
     background-image: url("/paperFurl.png");
-    background-size: cover; 
+    background-size: 100% 100%; 
 
 }
 
