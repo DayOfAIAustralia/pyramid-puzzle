@@ -3,7 +3,6 @@ import { arrayMove } from '@dnd-kit/sortable'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import React from 'react'
 import { v4 as newId } from 'uuid';
-import axios from "axios"
 import { Wheel } from 'react-custom-roulette-r19'
 
 import useSound from 'use-sound';

@@ -9,7 +9,6 @@ import './components/room/ChineseRoom.css'
 import './components/desk/Desk.css'
 
 import { isMobile } from 'react-device-detect';
-import PopupItem from "./components/Popups"
 import "./components/Popup.css"
 
 function App() {
@@ -24,7 +23,7 @@ function App() {
 
                 </div>
                 <div className="popup-text" style={{textAlign: "center"}}>
-                    Please relaunch through a desktop browser for access to 'The Chinese Room' Philosophy Game
+                    Please relaunch through a desktop browser for access to 'The Pyramid Puzzles' Philosophy Game
                     
                 </div>
             </section>
