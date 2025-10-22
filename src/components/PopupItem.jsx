@@ -3,6 +3,7 @@ import { TutorialContext, LevelContext } from './Context'
 import axios from "axios"
 import useSound from 'use-sound';
 import Markdown from 'react-markdown'
+import { motion } from 'framer-motion'
 
 import swooshSound from '../assets/sounds/swoosh.wav'
 
@@ -16,12 +17,15 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     const [helpData, setHelpData] = useState('')
     const [helpDisabled, setHelpDisabled] = useState(false)
     const [playSwoosh] = useSound(swooshSound)
+    const [showTutorialArrow, setShowTutorialArrow] = useState(false);
+    const [arrowLocation, setArrowLocation] = useState({})
 
     useEffect(() => {
         if (actions === -1) {
             setIsTutorial(true)
             setPosition({top: "50%", left: "50%", right: "auto", bottom: "auto"})
         } else if (actions === 0) {
+            setShowTutorialArrow(true)
             playSwoosh()
             const newOrder = {
                 id: 0,
@@ -45,26 +49,62 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                 })
             })
             setPosition({top: "30%", left: "0%", right: "auto", bottom: "auto"})
+            setArrowLocation({top: "30%", left: "0%", right: "auto", bottom: "auto", transform: "rotate(90deg)"})
+
         } else if (actions === 1) {
             setPosition({top: "30%", left: "auto", right: "0", bottom: "auto"})
+            setArrowLocation({top: "auto", left: "auto", right: "18%", bottom: "20%"})
+
         } else if (actions === 2) {
             setPosition({top: "30%", left: "auto", right: "5%", bottom: "auto"})
+            setArrowLocation({top: "auto", left: "47%", right: "auto", bottom: "20%"})
+
         } else if (actions === 3) {
+            setShowTutorialArrow(false)
+
             setPosition({top: "30%", left: "auto", right: "30%", bottom: "auto"})
         } else if (actions === 4) {
+            setShowTutorialArrow(true)
+            setArrowLocation({top: "auto", left: "60%", right: "auto", bottom: "38%",  transform: "rotate(180deg)"})
+
             setPosition({top: "30%", left: "auto", right: "25%", bottom: "auto"})
         } else if (actions === 5) {
+            setArrowLocation({top: "auto", left: "10%", right: "auto", bottom: "10%", transform: "rotate(320deg)"})
+
             setPosition({top: "30%", left: "0", right: "auto", bottom: "auto"})
         } else if (actions === 6) {
+            setArrowLocation({top: "auto", left: "auto", right: "22%", bottom: "22%",})
+
             setPosition({top: "30%", left: "auto", right: "0", bottom: "auto"})
         } else if (actions === 7) {
             // removed
         } else if (actions === 8) {
             // removed
         } else if (actions === 9) {
+            setShowTutorialArrow(false)
+
             setStartUpdate(true)
         }
     }, [actions])
+
+    const arrow = <motion.img
+        src='/arrow.png'
+        alt="glowing arrow"
+        style={arrowLocation}
+        className='tutorial-arrow'
+        animate={{
+            filter: [
+            "drop-shadow(0 0 6px orange)",
+            "drop-shadow(0 0 12px orange)",
+            "drop-shadow(0 0 6px orange)"
+            ]
+        }}
+        transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+        }}
+    />
 
     let popupStyle
     let dataStyle
@@ -108,6 +148,8 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     })
 
     return (
+        <>
+        {showTutorialArrow && arrow}
         <div className="popup" key={'dialogue-box'} style={popupStyle}>
             <section className="popup-data" style={dataStyle}>
                 <div className="popup-text">
@@ -139,5 +181,6 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                 </div>
             }
         </div>
+        </>
     )
 }
