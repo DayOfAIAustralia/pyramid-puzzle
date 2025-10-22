@@ -361,7 +361,8 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
         const question = rules.active.find((rule) => rule.order === receivedResponse.order)
         const xpGainedPerOrder = 30;
 
-        if (question.answer === receivedResponse.answer) {
+        // Check if question can be found first (because of tutorial q being deleted)
+        if (question && question.answer === receivedResponse.answer) {
             playDing()
             updateLevel(xpGainedPerOrder)
         } else {
