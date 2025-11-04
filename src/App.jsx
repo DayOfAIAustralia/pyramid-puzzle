@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { LevelContext } from './components/Context'
+import {  AnimatePresence, motion } from 'framer-motion'
 
 import ChineseRoom from './components/room/ChineseRoom'
 import Desk from './components/desk/Desk'
@@ -49,6 +50,32 @@ function App() {
 
   const [startUpdate, setStartUpdate] = useState(false)
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500); // 1.5 second loading screen
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const imagesToPreload = [
+      '/bin.png',
+      '/paperContainer.png',
+      '/arrow.png',
+      '/question.png',
+      '/dictionaryOpen.png',
+      '/rulesOpen.png',
+      '/paperFurl.png',
+      '/response.png',
+      '/slip.png',
+    ];
+
+    imagesToPreload.forEach((image) => new Image().src = image);
+  }, []);
+
   const [orderAnswer, setOrderAnswer] = useState([
     {
     id: "orders",
@@ -76,8 +103,57 @@ function App() {
     }
   ])
 
+
   return (
     <>
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="loading-screen"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#c2b280',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 9999
+            }}
+            exit={{ opacity: 0, transition: { duration: 0.5 } }}
+          >
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle
+                cx="30"
+                cy="30"
+                r="25"
+                stroke="#fff"
+                strokeWidth="5"
+                fill="transparent"
+              />
+              <motion.circle
+                cx="30"
+                cy="30"
+                r="25"
+                stroke="#3498db"
+                strokeWidth="5"
+                fill="transparent"
+                strokeDasharray={157}
+                strokeDashoffset={157}
+                transform="rotate(-90 30 30)"
+                animate={{ strokeDashoffset: 0 }}
+                transition={{
+                  duration: 1.5,
+                  ease: "linear"
+                }}
+              />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <LevelContext value={{level: [level, setLevel], dialogue: [dialogue, setDialogue], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState]
       }}>
         <Popups orderAnswerArr={[orderAnswer, setOrderAnswer]}/>
