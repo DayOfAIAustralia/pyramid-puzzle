@@ -155,7 +155,6 @@ export default function Desk({orderAnswerArr}) {
 
     React.useEffect(() => {
         if (!startUpdate) return
-        const seen = new Set();
         // Removes tutorial example
         setRules(prev => {
             return {inactive: prev.inactive, active: []}

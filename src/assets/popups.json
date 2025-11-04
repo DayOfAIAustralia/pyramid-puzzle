@@ -49,11 +49,10 @@
                         "text": "Go ahead",
                         "goto": 4
                     }
-                ],
-                "actions": -1
+                ]
             },
             {
-                "text": "Firstly, you receive a message from the outside. Look, one's just come in below!",
+                "text": "Firstly, you receive a message from the outside. Look, one's just come in below! Try dragging it around.",
                 "buttons": [
                     {
                         "id": 1,

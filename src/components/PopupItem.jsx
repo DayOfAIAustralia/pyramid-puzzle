@@ -24,7 +24,10 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     
     // Non button progression
     useEffect(() => {
-        if (actions === 1 && tutorialState === 'rulebook-open') {
+        if (actions === 0 && tutorialState === 'paper-dragged') {
+            updateDialogue(buttons[0].goto)
+
+        } else if (actions === 1 && tutorialState === 'rulebook-open') {
             updateDialogue(buttons[0].goto)
         
         } else if (actions === 2 && tutorialState === 'dictionary-open') {
@@ -47,10 +50,10 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
     // Button progression
     useEffect(() => {
-        if (actions === -1) {
+        if (actions === 0) {
             setIsTutorial(true)
-            setPosition({top: "50%", left: "50%", right: "auto", bottom: "auto"})
-        } else if (actions === 0) {
+            setUseButton(false)
+            
             setShowTutorialArrow(true)
             playSwoosh()
             // create tutorial order
@@ -82,7 +85,6 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
             setPosition({top: "30%", left: "auto", right: "0", bottom: "auto"})
             setArrowLocation({top: "auto", left: "auto", right: "18%", bottom: "20%"})
 
-            setUseButton(false)
 
         } else if (actions === 2) {
             setPosition({top: "30%", left: "auto", right: "5%", bottom: "auto"})

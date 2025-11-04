@@ -13,7 +13,13 @@ export default function Order({ children, id, slide, className }) {
     }, [])
 
     const windowHeight = useWindowHeight()
-    const yStart = (Math.random() * (windowHeight / 2) + windowHeight / 2) - 75;
+
+    // Define desk boundaries
+    const deskTop = windowHeight * 0.5; // Desk starts at 50% from the top
+    const elementHeight = 62; // Estimated height of the Order component
+    const spawnableHeight = windowHeight - deskTop - elementHeight;
+
+    const yStart = Math.random() * spawnableHeight + deskTop;
     const start = slide ? {x: 0, y: yStart} : {x: 0, y: 150};
     return (
         <DraggableAnywhere 

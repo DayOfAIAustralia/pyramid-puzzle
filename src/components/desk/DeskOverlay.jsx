@@ -26,6 +26,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
     const [playBin] = useSound(binSound)
     const [playWrong] = useSound(wrongSound)
     const [playDing] = useSound(dingSound)
+    
 
     const orderAnswerContainer = {
     ORDER: 0,
@@ -53,7 +54,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
     const [hoverDropped, setHoverDropped] = React.useState(false)
     const [hoverDroppedItem, setHoverDroppedItem] = React.useState(null)
     const [activeId, setActiveId] = React.useState(null)
-        
+    const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
 
     React.useEffect(() => {
         const checkMousePosition = (e) => {
@@ -164,7 +165,15 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
     function handleNotesDragStart({ active, over }) {
         setHoldingOutput(true)
 
-        setActiveId(active.id)
+        const activeId = active.id;
+        setActiveId(activeId)
+
+        if (!firstOrderPickup) {
+            setFirstOrderPickup(true);
+            setTimeout(() => {
+                setTutorialState("paper-dragged");
+            }, 500);
+        }
     }
 
     function handleNotesDragOver(event) {

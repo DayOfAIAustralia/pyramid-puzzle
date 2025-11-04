@@ -42,7 +42,7 @@ export default function Popups({orderAnswerArr}) {
     if (currentPopup === null) return;
     return (
         <TutorialContext value={[isTutorial, setIsTutorial]}>
-            {!isTutorial ? <div className="popups" >
+            <div className={!isTutorial ? "popups" : ""}>
                 <PopupItem
                     text={currentPopup[popupIndex].text}
                     buttons={currentPopup[popupIndex].buttons}
@@ -52,13 +52,6 @@ export default function Popups({orderAnswerArr}) {
                     help={currentPopup[popupIndex]?.help}
                 />
             </div>
-            : <PopupItem
-                    text={currentPopup[popupIndex].text}
-                    buttons={currentPopup[popupIndex].buttons}
-                    updateDialogue={updateDialogue}
-                    actions={currentPopup[popupIndex]?.actions}
-                    orderAnswerArr={orderAnswerArr}
-            />}
         </TutorialContext>
     )
 }

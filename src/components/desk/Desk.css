@@ -112,7 +112,7 @@
     background-image: url("/slip.png");
     background-size: 100% 100%;
     width: 29vh;
-    height: auto;
+    height: 62px;
     padding: 20px;
 
     cursor: grab;
