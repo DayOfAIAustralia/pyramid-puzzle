@@ -16,7 +16,7 @@ export default function Order({ children, id, slide, className }) {
 
     // Define desk boundaries
     const deskTop = windowHeight * 0.5; // Desk starts at 50% from the top
-    const elementHeight = 62; // Estimated height of the Order component
+    const elementHeight = 70; // Estimated height of the Order component
     const spawnableHeight = windowHeight - deskTop - elementHeight;
 
     const yStart = Math.random() * spawnableHeight + deskTop;

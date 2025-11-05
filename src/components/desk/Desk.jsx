@@ -171,9 +171,14 @@ export default function Desk({orderAnswerArr}) {
 
     const generateNewOrder = React.useCallback(() => {
         if (!rules.active?.length) return;
-        const randRule = Math.floor(Math.random() * rules.active.length);
+        // finds a random rule that isnt already on the table
+        let randRule = Math.floor(Math.random() * rules.active.length);
+        while (orderAnswer[orderAnswerContainer.ORDER].items.find(item => item.id === randRule)) {
+            randRule = Math.floor(Math.random() * rules.active.length);
+        }
+         
         const newOrder = {
-            id: newId(),
+            id: randRule,
             text: rules.active[randRule].order,
             type: 'orders',
             initial: true

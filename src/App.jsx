@@ -39,7 +39,7 @@ function App() {
     level: 0,
     xp: 0,
     prestige: 0,
-    xpRequired: 90
+    xpRequired: 60
   })
 
   const [tutorialState, setTutorialState] = useState(null)

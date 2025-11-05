@@ -12,7 +12,7 @@ export default function RuleBook({ref, rules, updateRule=null}) {
 
 
     const [currPage, setCurrPage] = useState(1);
-    const rulesPerPage = 4;
+    const rulesPerPage = 3;
 
     const lastIndex = currPage * rulesPerPage;
     const firstIndex = lastIndex - rulesPerPage;
@@ -37,7 +37,7 @@ export default function RuleBook({ref, rules, updateRule=null}) {
             <div className='rule' key={rule.id}>
                 <span>You Receive: <span className="character">{rule.order}</span></span>
                 <span>You Respond: <span className="character">{rule.answer}</span></span>
-                <button onClick={() => updateRule(rule.order)}>Generate</button>
+                {rule.answer === "???" ? <button onClick={() => updateRule(rule.order)} className="generate-button">Generate</button>: null}
             </div>
         )
     })
@@ -58,12 +58,17 @@ export default function RuleBook({ref, rules, updateRule=null}) {
         <DraggableAnywhere 
             id='rulebook-handle'
             ref={ref} 
-            startPos={{x: useWindowWidth() * 0.75, y: useWindowHeight() / 2 - 120}} 
+            startPos={{x: useWindowWidth() * 0.75, y: useWindowHeight() / 2 - 290}} 
             className='rulebook-ui'
             type='container'
             off={true}
         >
-            {rulesElements}
+            <div className="book-tab">
+                <h4>Rulebook</h4>
+            </div>
+            <div className="rules-content">
+                {rulesElements}
+            </div>
             <div className="rulebook-btns">
                 {pageButtons}
             </div>
