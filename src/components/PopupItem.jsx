@@ -83,12 +83,12 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
         } else if (actions === 1) {
             setPosition({top: "30%", left: "auto", right: "0", bottom: "auto"})
-            setArrowLocation({top: "auto", left: "auto", right: "18%", bottom: "20%"})
+            setArrowLocation({top: "auto", left: "auto", right: "16%", bottom: "20%"})
 
 
         } else if (actions === 2) {
             setPosition({top: "30%", left: "auto", right: "5%", bottom: "auto"})
-            setArrowLocation({top: "auto", left: "47%", right: "auto", bottom: "20%"})
+            setArrowLocation({top: "auto", left: "51%", right: "auto", bottom: "20%"})
 
         } else if (actions === 3) {
             setShowTutorialArrow(false)
@@ -100,7 +100,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
             setPosition({top: "30%", left: "auto", right: "25%", bottom: "auto"})
         } else if (actions === 5) {
-            setArrowLocation({top: "auto", left: "10%", right: "auto", bottom: "10%", transform: "rotate(320deg)"})
+            setArrowLocation({top: "auto", left: "12%", right: "auto", bottom: "10%", transform: "rotate(320deg)"})
 
             setPosition({top: "30%", left: "0", right: "auto", bottom: "auto"})
         } else if (actions === 6) {

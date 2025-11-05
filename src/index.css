@@ -16,4 +16,5 @@ html, body {
   padding: 0;
   height: 100vh;
   min-width: 600px;
+  font-size: 1em;
 }

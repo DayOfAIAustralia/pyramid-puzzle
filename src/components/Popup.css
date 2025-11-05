@@ -136,7 +136,7 @@ button.btn-disabled {
 .tutorial-arrow {
     pointer-events: none;
     position: absolute;
-    width: 180px;
+    width: 12vw;
     height: auto;
     z-index: 999;
 }

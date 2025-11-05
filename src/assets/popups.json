@@ -63,7 +63,7 @@
                 "actions": 0
             },
             {
-                "text": "Then, you can open your rulebook to find out how to respond. You can drag the popup around as needed. And if you want to close it, just click the book again.",
+                "text": "Then, you can open your rulebook to find out how to respond. You can drag the popup around as needed. After the tutorial, if you want to close it, just click the book again.",
                 "buttons": [
                     {
                         "id": 1,

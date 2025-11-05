@@ -176,7 +176,7 @@ export default function Desk({orderAnswerArr}) {
         while (orderAnswer[orderAnswerContainer.ORDER].items.find(item => item.id === randRule)) {
             randRule = Math.floor(Math.random() * rules.active.length);
         }
-         
+        
         const newOrder = {
             id: randRule,
             text: rules.active[randRule].order,
@@ -646,7 +646,7 @@ export default function Desk({orderAnswerArr}) {
                     > 
                     {activeId && (getActiveItem() !== null) 
                     ? (
-                    <CharacterOverlay className='draggable'>
+                    <CharacterOverlay className='dragged-draggable'>
                         {getActiveItem()?.character}
                     </CharacterOverlay>
                     ): null}

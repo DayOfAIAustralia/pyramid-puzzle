@@ -104,7 +104,7 @@
   background-image: url("/slip.png");
   background-size: 100% 100%;
   width: 29vh;
-  height: 62px;
+  height: auto;
   padding: 20px;
 
   cursor: grab;
@@ -121,9 +121,6 @@
   transform: translateX(0);
 }
 
-.answer {
-  max-height: 32px;
-}
 
 .response {
   background-image: url("/response.png");
@@ -346,12 +343,23 @@
 }
 
 .character {
-  font-size: 24px;
+  font-size: 2em;
+}
+
+.dragged-draggable {
+  padding: 4px;
+  width: 2em;
+  text-align: center;
+  height: auto;
+  background-color: rgb(245, 245, 220);
+  border: 1px solid black;
+  cursor: grab;
+  z-index: 5;
 }
 
 .draggable {
   padding: 4px;
-  width: 24px;
+  width: 1em;
   text-align: center;
   height: auto;
   background-color: rgb(245, 245, 220);
