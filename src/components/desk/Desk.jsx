@@ -205,7 +205,7 @@ export default function Desk({orderAnswerArr}) {
     const ruleBookImg = React.useRef(null)
 
 
-    const orderDelay = 2 * 1000; // 20 seconds
+    const orderDelay = 20 * 1000; // 20 seconds
 
     React.useEffect(() => {
         if (!currentlyPlaying) return
@@ -579,12 +579,12 @@ export default function Desk({orderAnswerArr}) {
                     mustStartSpinning={mustSpin}
                     prizeNumber={winningNumber}
                     data={wheelData}
+                    fontSize={24}
                     backgroundColors={['#4bc1f5', '#f6cb69']}
                     textColors={['#000000ff']}
                     onStopSpinning={finishSpinning}
                     spinDuration={0.45}
                     disableInitialAnimation={true}
-                    pointerProps={{src: "/spinwheelPointer.png"}}
                 />
                 
             </div>}

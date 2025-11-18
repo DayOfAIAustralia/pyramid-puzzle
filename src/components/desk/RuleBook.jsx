@@ -9,7 +9,7 @@ import ruleMoveSound from '../../assets/sounds/ruleMove.wav'
 export default function RuleBook({ref, rules, updateRule=null}) {
     const [playRuleMove] = useSound(ruleMoveSound)
     const [level, setLevel] = useContext(LevelContext).level
-
+    const [disabled, setDisabled] = useState(false)
 
     const [currPage, setCurrPage] = useState(1);
     const rulesPerPage = 3;
@@ -21,7 +21,13 @@ export default function RuleBook({ref, rules, updateRule=null}) {
 
     useEffect(() => {
         setCurrPage(1)
+        setDisabled(false)
     }, [rules])
+
+    function handleButtonClick(rule) {
+        updateRule(rule.order)
+        setDisabled(true);
+    }
 
     const rulesElements = currRules.map(rule => {
         if (level.level < 2) {
@@ -37,7 +43,7 @@ export default function RuleBook({ref, rules, updateRule=null}) {
             <div className='rule' key={rule.id}>
                 <span>You Receive: <span className="character">{rule.order}</span></span>
                 <span>You Respond: <span className="character">{rule.answer}</span></span>
-                {rule.answer === "???" ? <button onClick={() => updateRule(rule.order)} className="generate-button">Generate</button>: null}
+                {rule.answer === "???" ? <button disabled={disabled} onClick={() => handleButtonClick(rule)} className="generate-button">Generate</button>: null}
             </div>
         )
     })

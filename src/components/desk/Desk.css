@@ -241,6 +241,7 @@
 .rules-content {
   padding: 6px;
   padding-top: 0px;
+  flex-grow: 1;
 }
 
 .rule {
@@ -267,6 +268,14 @@
   background-color: #d2b48c; 
 }
 
+.generate-button:disabled {
+  background-color: #d1c1b1; 
+  border: 1px solid #a88d7f; 
+  color: #8d7a75; 
+  cursor: not-allowed; 
+  opacity: 0.7; 
+}
+
 .rule > span {
   display: block;
 }
@@ -277,10 +286,7 @@
   align-items: center;
   gap: 3px;
 
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  height: 10%;
   margin-bottom: 8px;
 }
 
@@ -391,6 +397,7 @@
 
 .spinner-wheel {
   position: absolute;
+  z-index: 99999;
 }
 
 .book-tab {
