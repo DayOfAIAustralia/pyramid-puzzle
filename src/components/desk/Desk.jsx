@@ -206,12 +206,19 @@ export default function Desk({orderAnswerArr}) {
         const selectedRuleId = availableIndices[randomIndex];
         const selectedRule = rules.active.find(elem => elem.id === selectedRuleId);
 
+        // safety to prevent crash
+        if (!selectedRule) {
+            console.error("Could not find rule with ID:", selectedRuleId);
+            return;
+        }
+
+        playSwoosh();
+
         setOrderAnswer(prev => {
             if (prev[orderAnswerContainer.ORDER].items.length >= 3) {
                 return prev;
             }
 
-            playSwoosh();
 
             const newOrder = {
                 id: selectedRule.id,
