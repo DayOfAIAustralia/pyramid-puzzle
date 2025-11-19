@@ -8,9 +8,9 @@ export default async function handler(req, res) {
         - Do not use more than 150 words. 
         - Use Markdown formatting.
         - You do not need to explicitly mention the argument just explain its ideas
-        - Provide helpful examples and analogies to real life`;
+        - Provide helpful examples and analogies to real life
+        - start your response explicitly acknowledging what the user highlighted`;
     const user = `Provide me with information to help me understand this passage: ${context} where I have specifically highlighted ${highlight}`;
-    console.log("Received AI support request.")
     try {
         const result = await generateText({
             model: google("gemini-2.5-flash-lite"),

@@ -251,14 +251,26 @@ export default function Desk({orderAnswerArr}) {
     const ruleBookUIRef = React.useRef(null)
     const ruleBookImg = React.useRef(null)
 
+    const savedCallback = React.useRef(generateNewOrder);
 
-    const orderDelay = 5 * 1000; // 15 seconds
+    React.useLayoutEffect(() => {
+        savedCallback.current = generateNewOrder;
+    }, [generateNewOrder]);
+
+    const orderDelay = 15 * 1000; // 15 seconds
 
     React.useEffect(() => {
-        if (!currentlyPlaying) return
-        const interval = setInterval(generateNewOrder, orderDelay)
-        return (() => clearInterval(interval))
-    }, [currentlyPlaying, generateNewOrder])
+        if (!currentlyPlaying) return;
+
+        // This function wrapper calls whatever is currently in the ref
+        const tick = () => {
+            savedCallback.current();
+        }
+
+        const interval = setInterval(tick, orderDelay);
+        
+        return () => clearInterval(interval);
+    }, [currentlyPlaying, orderDelay]);
 
     React.useEffect(() => {
         if (level.level === 0) return;

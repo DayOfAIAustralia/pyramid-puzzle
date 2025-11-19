@@ -27,6 +27,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     const [helpButtonHover, setHelpButtonHover] = useState(false)
     const [arrowRotation, setArrowRotation] = useState(0)
     const [arrowMoveDirection, setArrowMoveDirection] = useState('vertical')
+    const [key, setKey] = useState(1)
 
     // Non button progression
     useEffect(() => {
@@ -205,6 +206,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     }
 
     function changeHighlighting() {
+        setKey(prev => prev + 1)
         setIsHighlighting(prev => !prev)
         setShowSendHelp(prev => !prev)
     }
@@ -269,7 +271,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                     }
                     {help && (
                         <motion.button
-                        key="helpButton" 
+                        key={key}
                         className="popup-help"
                         onClick={changeHighlighting}
                         disabled={helpDisabled}
