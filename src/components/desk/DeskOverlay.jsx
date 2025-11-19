@@ -107,13 +107,13 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
         <>
             <div className='stapler-drop'>
                 {orderItem ? 
-                <div>{orderItem.text}</div>
-                : <span>Place your order's here!</span>}
+                <div style={{fontSize: 24}}>{orderItem.text}</div>
+                : <span>Order's go here!</span>}
             </div>
             <div className='stapler-drop'>
                 {answerItem ? 
-                <div>{answerItem.text}</div>
-                : <span>Place your answer's here!</span>}
+                <div style={{fontSize: 24}}>{answerItem.text}</div>
+                : <span>Answer's go here!</span>}
             </div>
             {orderItem && answerItem ? 
             <button className='stapler-btn' onClick={createResponse}>Staple</button>

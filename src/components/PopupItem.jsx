@@ -251,7 +251,9 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                 <div className="popup-text">
                     <TextHighlighter isHighlighting={isHighlighting}
                         setIsHighlighting={setIsHighlighting} setHighlightedText={setHighlightedText}>
-                        {text}
+                        <div className="markdown-text-wrapper">
+                            <Markdown>{text.replace(/\n/g, "  \n")}</Markdown>
+                        </div>
                     </TextHighlighter>
                 </div>
                 <AnimatePresence mode="wait"> {/* 'mode="wait"' ensures one animation finishes before the next starts if both change */}
