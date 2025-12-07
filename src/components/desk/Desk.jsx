@@ -257,7 +257,7 @@ export default function Desk({orderAnswerArr}) {
         savedCallback.current = generateNewOrder;
     }, [generateNewOrder]);
 
-    const orderDelay = 15 * 1000; // 15 seconds
+    const orderDelay = 22 * 1000; // 22 seconds
 
     React.useEffect(() => {
         if (!currentlyPlaying) return;
@@ -275,6 +275,16 @@ export default function Desk({orderAnswerArr}) {
     React.useEffect(() => {
         if (level.level === 0) return;
         moveInactiveRulesToActive()
+        if (level.level === 2) {
+            // reset playing field
+            setOrderAnswer(prev => {
+                prev[orderAnswerContainer.ORDER].items = []
+                prev[orderAnswerContainer.RESPONSES].items = []
+                prev[orderAnswerContainer.STAPLER].items = []
+                prev[orderAnswerContainer.ANSWER].items = []
+                return prev;
+            })
+        }
     }, [level.level])
 
     function moveInactiveRulesToActive() {
