@@ -14,7 +14,7 @@ import "./components/Popup.css"
 function App() {
 
   const [level, setLevel] = useState({
-    level: 0, // can change to skip to later levels
+    level: 3, // can change to skip to later levels
     xp: 0,
     xpRequired: 90
   })

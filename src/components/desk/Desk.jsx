@@ -264,7 +264,7 @@ export default function Desk({orderAnswerArr}) {
         savedCallback.current = generateNewOrder;
     }, [generateNewOrder]);
 
-    const orderDelay = 22 * 1000; // 22 seconds
+    const orderDelay = 25 * 1000; // 25 seconds
 
     React.useEffect(() => {
         if (!currentlyPlaying) return;

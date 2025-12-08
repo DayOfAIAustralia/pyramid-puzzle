@@ -7,6 +7,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import TextHighlighter from './TextHighlighter';
 import swooshSound from '../assets/sounds/swoosh.wav'
 import { RiMailSendLine } from "react-icons/ri";
+import { useWindowWidth, useWindowHeight } from '@react-hook/window-size'
+import Confetti from 'react-confetti'
+
+import confettiSound from '../assets/sounds/confetti.mp3'
 
 export default function PopupItem({text, buttons, updateDialogue, actions, orderAnswerArr, help=false}) {
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
@@ -16,7 +20,6 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     const [helpVisible, setHelpVisible] = useState(false)
     const [helpData, setHelpData] = useState('')
     const [helpDisabled, setHelpDisabled] = useState(false)
-    const [playSwoosh] = useSound(swooshSound)
     const [showTutorialArrow, setShowTutorialArrow] = useState(false);
     const [arrowLocation, setArrowLocation] = useState({})
     const [useButton, setUseButton] = useState(true)
@@ -28,6 +31,11 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     const [arrowRotation, setArrowRotation] = useState(0)
     const [arrowMoveDirection, setArrowMoveDirection] = useState('vertical')
     const [key, setKey] = useState(1)
+    const [celebration, setCelebration] = useState(false)
+    const [celebrationButton, setCelebrationButton] = useState(false)
+
+    const [playSwoosh] = useSound(swooshSound)
+    const [playConfetti] = useSound(confettiSound)
 
     // Non button progression
     useEffect(() => {
@@ -132,6 +140,8 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
             setShowTutorialArrow(false)
 
             setStartUpdate(true)
+        } else if (actions === 10) {
+            setCelebrationButton(true)
         }
     }, [actions])
 
@@ -245,9 +255,21 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
         helpImage = "/questionHighlight.png"
     }
 
+    const confetti = <Confetti
+        width={useWindowWidth()}
+        height={useWindowHeight()}
+        />
+
+    function updateCelebration() {
+        playConfetti()
+        setCelebration(true)
+    }
+    
+
     return (
         <>
         {showTutorialArrow && arrow}
+        {celebration && confetti}
         <div className="popup" key={'dialogue-box'} style={popupStyle}>
             <section className="popup-data" style={dataStyle}>
                 <div className="popup-text">
@@ -259,6 +281,15 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                     </TextHighlighter>
                 </div>
                 <AnimatePresence mode="wait"> {/* 'mode="wait"' ensures one animation finishes before the next starts if both change */}
+                    {celebrationButton &&
+                        <motion.div 
+                            className={`popup-btns ${btnClass}`}
+                            variants={fadeVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit">
+                                <button key={1} disabled={celebration} className={celebration ? 'btn-disabled' : ''} onClick={updateCelebration}>Celebrate! 🎉</button>
+                        </motion.div>}
                     {useButton && !showSendHelp && 
                         <motion.div 
                             className={`popup-btns ${btnClass}`}
@@ -266,7 +297,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                             initial="hidden"
                             animate="visible"
                             exit="exit">
-                            {buttonElements}
+                                {buttonElements}
                         </motion.div>
                     }
                     {help && (
