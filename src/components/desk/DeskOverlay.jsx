@@ -1,6 +1,6 @@
 import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, DragOverlay, pointerWithin } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { v4 as newId } from 'uuid';
 
 import { useWindowWidth } from '@react-hook/window-size'
@@ -13,15 +13,13 @@ import Response from './Response.jsx'
 
 import useSound from 'use-sound';
 import paperPlaceSound from '../../assets/sounds/paperPlace.wav'
-import staplerOpenSound from '../../assets/sounds/staplerOpen.wav'
 import stapleSound from '../../assets/sounds/stapler.wav'
 import binSound from '../../assets/sounds/trash.wav'
 import dingSound from '../../assets/sounds/ding.wav'
 import wrongSound from '../../assets/sounds/wrong.mp3'
 
-export default function DeskOverlay({orderAnswerArr, rulesList}) {
+export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     const [playStaple] = useSound(stapleSound)
-    const [playOpenStapler] = useSound(staplerOpenSound)
     const [playPaperPlace] = useSound(paperPlaceSound)
     const [playBin] = useSound(binSound)
     const [playWrong] = useSound(wrongSound)
@@ -47,7 +45,6 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
     const binImg = React.useRef(null)
     const outputSidebar = React.useRef(null)
     const staplerUIRef = React.useRef(null)
-    const [staplerOpen, setStaplerOpen] = React.useState(false)
     const [holdingOutput, setHoldingOutput] = React.useState(false)
     const [showOutput, setShowOutput] = React.useState(false)
     const [hoverDropped, setHoverDropped] = React.useState(false)
@@ -403,13 +400,6 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
         })
     }
 
-    function openStapler() {
-        if (!startUpdate && tutorialState != "slip-created") return;
-
-        playOpenStapler()
-        setTutorialState('stapler-open')
-        setStaplerOpen(prev => !prev)
-    }
 
     return (
         <DndContext
@@ -448,9 +438,6 @@ export default function DeskOverlay({orderAnswerArr, rulesList}) {
                 
             </div>
             <div className='stapler'>
-                <button className='stapler'onClick={openStapler}>
-
-                </button>
                 <Droppable 
                     id='stapler' 
                     className='stapler-ui' 
