@@ -2,14 +2,14 @@ import Draggable from './Draggable'
 import React from 'react'
 import { useDndMonitor } from '@dnd-kit/core';
 
-export default function DraggableAnywhere({ children, ref=null, className, id, startPos, disabled=false, off=false }) {
+export default function DraggableAnywhere({ children, ref=null, className, id, startPos, disabled=false, off=false, style={}}) {
     const [pos, setPos] = React.useState({ x: startPos.x, y: startPos.y });
     // Ref to store the previous window dimensions for comparison
     const prevDimensionsRef = React.useRef({ 
         width: window.innerWidth, 
         height: window.innerHeight 
     });
-
+    console.log(style)
     useDndMonitor({
         onDragEnd({active, delta}) {
             if (active?.id !== id) return; 
@@ -58,7 +58,7 @@ export default function DraggableAnywhere({ children, ref=null, className, id, s
 
     return (
         <div ref={ref} className={off ? "default-off" : ""}>
-            <Draggable id={id} className={className} pos={pos} disabled={disabled}>
+            <Draggable id={id} className={className} pos={pos} disabled={disabled} passedStyles={style}>
                 {children}
             </Draggable>
         </div>

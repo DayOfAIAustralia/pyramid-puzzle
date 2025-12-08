@@ -52,6 +52,10 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     const [activeId, setActiveId] = React.useState(null)
     const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
     const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
+    const [zIndices, setZIndices] = React.useState({});
+    
+    // 2. Keeps track of the highest number used so far. 
+    const globalZCounter = React.useRef(10);
 
 
     React.useEffect(() => {
@@ -82,19 +86,23 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     }, [holdingOutput])
 
     const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
-        return <Order id={order.id} key={order.id} slide={order.initial}>
+        const currentZ = zIndices[order.id] || 10;
+        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}}>
             <span className='character'>{order.text}</span>
         </Order>
     })
 
     const answerList = orderAnswer.find(container => container.id === 'answers').items.map(answer => {
-        return <Answer id={answer.id} key={answer.id}>
+        const currentZ = zIndices[answer.id] || 10;
+        return <Answer id={answer.id} key={answer.id} active={answer.id === activeId} style={{zIndex: currentZ}}>
             <span className='character'>{answer.text}</span>
         </Answer>
     })
 
     const responsesList = orderAnswer.find(container => container.id === 'responses').items.map(response => {
-        return <Response id={response.id} key={response.id}  />
+        const currentZ = zIndices[response.id] || 10;
+
+        return <Response id={response.id} key={response.id} active={response.id === activeId} style={{zIndex: currentZ}}/>
 
     })
 
@@ -167,11 +175,23 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         })
     }
 
+    const bringNoteToFront = (id) => {
+        // Increment the global counter
+        globalZCounter.current += 1;
+        
+        // Assign this new highest number to the specific order ID
+        setZIndices(prev => ({
+            ...prev,
+            [id]: globalZCounter.current
+        }));
+    };
+
     function handleNotesDragStart({ active, over }) {
         setHoldingOutput(true)
 
         const activeId = active.id;
         setActiveId(activeId)
+        bringNoteToFront(activeId)
 
         if (!firstOrderPickup) {
             setFirstOrderPickup(true);

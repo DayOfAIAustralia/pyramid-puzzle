@@ -135,8 +135,8 @@
 .response {
   background-image: url("/response.png");
   background-size: cover;
-  width: 29vh;
-  height: 29vh;
+  width: 18vh;
+  height: 23vh;
   padding: 20px;
 
   cursor: grab;
@@ -151,6 +151,10 @@
 .order > span {
   display: block;
   padding-bottom: 3px;
+}
+
+.active {
+  z-index: 9999;
 }
 
 .output {
