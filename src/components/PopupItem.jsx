@@ -194,7 +194,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
     let popupStyle
     let dataStyle
-    let btnClass
+    let btnClass = "popup-btns-bottom"
     if (actions !== undefined && actions < 7) {
         btnClass = "popup-btns-side"
         popupStyle = {
@@ -210,11 +210,8 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
             display: "flex",
             flexDirection: "row",
         }
-    } else {
-        btnClass = "popup-btns-bottom"
-
-    }
-
+    } 
+    
     function changeHighlighting() {
         setKey(prev => prev + 1)
         setIsHighlighting(prev => !prev)
