@@ -52,11 +52,9 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     const [activeId, setActiveId] = React.useState(null)
     const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
     const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
-    const [zIndices, setZIndices] = React.useState({});
-    
-    // 2. Keeps track of the highest number used so far. 
-    const globalZCounter = React.useRef(10);
 
+    const [zIndices, setZIndices] = React.useState({});
+    const globalZCounter = React.useRef(10);
 
     React.useEffect(() => {
         if (!startUpdate && tutorialState != "stapled-response") return;

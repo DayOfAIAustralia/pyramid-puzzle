@@ -157,6 +157,9 @@ export default function Desk({orderAnswerArr}) {
     })
     const [seenRules, setSeenRules] = React.useState([])
 
+    const [dictionaryZIndex, setDictionaryZIndex] = React.useState(10);
+    const [rulebookZIndex, setRulebookZIndex] = React.useState(10);
+
     React.useEffect(() => {
         if (!startUpdate) return
         // Removes tutorial example
@@ -438,6 +441,11 @@ export default function Desk({orderAnswerArr}) {
 
     function handleDragStart(event) {
         setActiveId(event.active.id)
+        if (event.active.id === 'rulebook-handle') {
+            setRulebookZIndex(dictionaryZIndex + 1);
+        } else if (event.active.id === 'dictionary-handle') {
+            setDictionaryZIndex(rulebookZIndex + 1);
+        }
     }
 
     function handleDragOver(event) {
@@ -787,6 +795,7 @@ export default function Desk({orderAnswerArr}) {
                     ref={dictionaryUIRef} 
                     disabled={parentDisabled}
                     rules={rules}
+                    zIndex={dictionaryZIndex}
                 />
                 
                 <button className="rules" onClick={openRuleBook}>
@@ -797,6 +806,7 @@ export default function Desk({orderAnswerArr}) {
                     ref={ruleBookUIRef}
                     rules={rules}
                     updateRule={updateRule}
+                    zIndex={rulebookZIndex}
                 />
 
                 <DragOverlay

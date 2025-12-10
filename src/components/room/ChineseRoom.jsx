@@ -15,7 +15,7 @@ import xpSound from '../../assets/sounds/xpPoints.wav'
 
 export default function ChineseRoom({gameOver}) {
     const [levelData, setLevel] = useContext(LevelContext).level
-    const [musicMuted, setMusicMuted] = useState(true)
+    const [musicMuted, setMusicMuted] = useState(false)
     const [tutorialOpen, setTutorialOpen] = useState(false)
     const { burst, Overlay } = useXpParticles();
     const xpIconRef = useRef(null);

@@ -55,12 +55,17 @@
     z-index: 9999;
     position: absolute;
     right: 0;
-    margin: 36px;
+    margin: 12px;
     cursor: pointer;
 }
 
 .overlay-btn {
     all: unset;
-    margin: 12px;
+    margin: 8px;
     cursor: pointer;
+}
+
+.overlay-btn:hover svg {
+    /* !important is needed to override the inline 'color' prop */
+    fill: #e9e642ff!important; /* Some icons use fill instead of color */
 }

@@ -7,7 +7,7 @@ import { FaArrowRight } from "react-icons/fa";
 import useSound from 'use-sound';
 import ruleMoveSound from '../../assets/sounds/ruleMove.wav'
 
-export default function RuleBook({ref, rules, updateRule=null}) {
+export default function RuleBook({ref, rules, updateRule=null, zIndex}) {
     const [playRuleMove] = useSound(ruleMoveSound)
     const [level, setLevel] = useContext(LevelContext).level
     const [disabled, setDisabled] = useState(false)
@@ -85,6 +85,7 @@ export default function RuleBook({ref, rules, updateRule=null}) {
             className='rulebook-ui'
             type='container'
             off={true}
+            style={{zIndex: zIndex}}
         >
             <div className="book-tab">
                 <h4>Rulebook</h4>

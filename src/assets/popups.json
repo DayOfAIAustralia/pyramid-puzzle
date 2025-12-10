@@ -334,11 +334,16 @@
       },
       {
         "id": 3,
-        "text": "As I mentioned previously, like you right now, computers are just highly complicated **symbol manipulation machines**.\n\nAt the most basic level, they are given a series of inputs, represented as either **1 or 0**. Then, based on the program it's been given, it creates a new series of 1's and 0's to send back out.\n\nAt a high level, this process may be interpreted by us as music, video, colour, or any number of other meaningful things. But to the computer, it's just moving around 1's and 0's, exactly the same way as you in the Heiroglyphics room, you're just moving around characters.",
+        "text": "As I mentioned previously, like you right now, computers are just highly complicated **symbol manipulation machines**.\n\nAt the most basic level, they are given a series of inputs, represented as either **1** *or* **0**. Then, based on the program it's been given, it creates a new series of 1's and 0's to send back out.\n\nAt a high level, this process may be interpreted by a human observer as music, video, colour, or any number of other meaningful things. But to the computer, it's just moving around 1's and 0's, exactly the same way as you in the Heiroglyphics room, you're just moving around characters.\n\nDo you think computer brains and human brains learn differently?",
         "buttons": [
           {
             "id": 1,
-            "text": "But can't the system learn the meaning?",
+            "text": "They are the same",
+            "goto": 5
+          },
+          {
+            "id": 2,
+            "text": "They are different",
             "goto": 4
           }
         ],
@@ -346,18 +351,30 @@
       },
       {
         "id": 4,
-        "text": "A computer can never **'learn'** in the way that we think of learning, because it's entirely limited to **syntax**. A computer never knows *why* it manipulates the symbols (1's and 0's) its given in different ways. Even if to us it seems to 'correctly' interpret our input, that's only because we told it how.\n\nHowever, I will admit, this argument is based on programs that are pre-defined. I've given you rules that provide an exact answer every time, but that's not how modern AI **LLM's - 'Large Language Models'** work.",
+        "text": "Right on, a computer's brain is different because it can never **'learn'** in the way that we think of learning. Computers are limited to understanding **syntax**. A computer never knows *why* it manipulates the symbols (1's and 0's) its given in different ways. Even if to us it seems to 'correctly' interpret our input, that's only because we told it how.\n\n Going into the computer's shoes, how would you know if your Egyptian dictionary turned out to be riddled with errors? You wouldn't! You cannot question your programming. \n\nHowever, I will admit, this argument is based on programs that are pre-defined. I've given you rules that provide an exact answer every time, but that's not how modern AI **LLM's - 'Large Language Models'** work.",
         "buttons": [
           {
             "id": 1,
             "text": "How do those work?",
-            "goto": 5
+            "goto": 6
           }
         ],
         "help": true
       },
       {
         "id": 5,
+        "text": "Surprisingly, they actually work completely differently! A computer's brain is different because it can never **'learn'** in the way that we think of learning. Computers are limited to understanding **syntax**. A computer never knows *why* it manipulates the symbols (1's and 0's) its given in different ways. Humans can understand both **syntax** ***and*** **semantics**. Even if a machine seems to 'correctly' give us an answer, that's only because we told it how.\n\n Going into the computer's shoes, how would you know if your Egyptian dictionary turned out to be riddled with errors? You wouldn't! You cannot question your programming. \n\nHowever, I will admit, this argument is based on programs that are pre-defined. I've given you rules that provide an exact answer every time, but that's not how modern AI **LLM's - 'Large Language Models'** work.",
+        "buttons": [
+          {
+            "id": 1,
+            "text": "How do those work?",
+            "goto": 6
+          }
+        ],
+        "help": true
+      },
+      {
+        "id": 6,
         "text": "Instead of telling you, I think I'll show you. \n\nThis is where your new upgrade kicks in. Now, for every rule you won't just be following direct programming, you're going to be **randomly generating** the response on the fly. Go check out the rule book and you'll see what I mean!",
         "buttons": [
           {

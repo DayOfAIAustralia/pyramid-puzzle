@@ -9,7 +9,7 @@ export default function DraggableAnywhere({ children, ref=null, className, id, s
         width: window.innerWidth, 
         height: window.innerHeight 
     });
-    console.log(style)
+    console.log(style +  " for " + id)
     useDndMonitor({
         onDragEnd({active, delta}) {
             if (active?.id !== id) return; 
