@@ -11,7 +11,7 @@ import egyptMusic from '../../assets/music/egyptMusic.wav'
 import celebrationMusic from '../../assets/music/victoryMusic.wav'
 
 import { useXpParticles } from './useXpParticles';
-import xpSound from '../../assets/sounds/xpPoints.mp3'
+import xpSound from '../../assets/sounds/xpPoints.wav'
 
 export default function ChineseRoom({gameOver}) {
     const [levelData, setLevel] = useContext(LevelContext).level
@@ -72,7 +72,7 @@ export default function ChineseRoom({gameOver}) {
         <div className='popup'>
             <div className='popup-data'>
                 <div className="popup-text" style={{fontSize: 24, fontWeight: "bold"}}>How To Play:</div>
-                <video width="600" controls>
+                <video width="600" autoPlay loop muted playsInLine>
                     <source src="/tutorialVideo.mp4" type="video/mp4" />
                     <img src="/tutorialGif.gif" alt="backup gif for tutorial"></img>
                 </video>

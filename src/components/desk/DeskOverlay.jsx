@@ -16,7 +16,7 @@ import paperPlaceSound from '../../assets/sounds/paperPlace.wav'
 import stapleSound from '../../assets/sounds/stapler.wav'
 import binSound from '../../assets/sounds/trash.wav'
 import dingSound from '../../assets/sounds/ding.wav'
-import wrongSound from '../../assets/sounds/wrong.mp3'
+import wrongSound from '../../assets/sounds/wrong.wav'
 
 export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     const [playStaple] = useSound(stapleSound)

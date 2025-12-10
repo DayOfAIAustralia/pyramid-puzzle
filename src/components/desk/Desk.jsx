@@ -6,14 +6,14 @@ import { v4 as newId } from 'uuid';
 import { Wheel } from 'react-custom-roulette-r19'
 
 import useSound from 'use-sound';
-import spinSound from '../../assets/sounds/spin.mp3'
+import spinSound from '../../assets/sounds/spin.wav'
 import paperRuffleSound from '../../assets/sounds/paperRuffle.wav'
 import bookOpenSound from '../../assets/sounds/bookOpen.wav'
 import bookCloseSound from '../../assets/sounds/bookClose.wav'
 import swooshSound from '../../assets/sounds/swoosh.wav'
 import tileSound from '../../assets/sounds/tile.wav'
 import staplerOpenSound from '../../assets/sounds/staplerOpen.wav'
-import hornSound from '../../assets/sounds/horn.mp3'
+import hornSound from '../../assets/sounds/confetti.wav'
 
 import DictionaryUI from './DictionaryUI.jsx'
 import PaperDroppable from './PaperDroppable.jsx';
