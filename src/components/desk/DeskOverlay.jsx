@@ -101,6 +101,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
     const handleOrderClick = (item) => {
         // 1. Check if Stapler Mode is active
         if (staplerModeOn) {
+            if (!paperString) return;
             // 2. Check if the item is the "correct type" (e.g., paper)
             if (item.type === 'orders') {
                 // Perform the stapling action
@@ -117,7 +118,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
 
     const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
         const currentZ = zIndices[order.id] || 10;
-        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={() => handleOrderClick(order)}>
+        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={() => handleOrderClick(order)} staplerModeOn={staplerModeOn}>
             <span className='character'>{order.text}</span>
         </Order>
     })
