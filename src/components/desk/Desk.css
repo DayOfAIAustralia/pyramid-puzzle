@@ -16,7 +16,7 @@
   position: relative;
 }
 
-.stapler {
+/* .stapler {
   position: absolute;
   height: 40vh;
   width: 40vh;
@@ -34,7 +34,7 @@
   top: 50%;
   left: 20%;
   cursor: pointer;
-}
+} */
 
 .stapler-2 {
   all: unset;
@@ -42,7 +42,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none;
 }
 
 .stapler-2 > img {
@@ -51,8 +50,6 @@
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
   margin: 0;
-  pointer-events: auto;
-
 }
 
 .stapler-ui {
@@ -423,6 +420,9 @@ body.dragging-cursor * {
   cursor: grabbing !important;
 }
 
+body.stapler-cursor * {
+  cursor: url("/staplerCursor.png"), auto !important;
+}
 
 .rules {
   all: unset;

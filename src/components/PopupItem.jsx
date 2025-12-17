@@ -50,17 +50,11 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
         } else if (actions === 3 && tutorialState === 'filled-paper') {
             updateDialogue(buttons[0].goto)
-        } else if (actions === 4 && tutorialState === 'slip-created') {
-            updateDialogue(buttons[0].goto)
         } else if (actions === 5 && tutorialState === 'stapler-open') {
             updateDialogue(buttons[0].goto)
-        // next is out of order because it was added later
         } else if (actions === 7 && tutorialState === 'stapled-response') {
             updateDialogue(buttons[0].goto)
-        } else if (actions === 6 && tutorialState === 'finished-response') {
-            updateDialogue(buttons[0].goto)
-
-        }
+        } 
     }, [tutorialState])
 
     // Button progression

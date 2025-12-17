@@ -13,13 +13,11 @@ import Response from './Response.jsx'
 
 import useSound from 'use-sound';
 import paperPlaceSound from '../../assets/sounds/paperPlace.wav'
-import stapleSound from '../../assets/sounds/stapler.wav'
 import binSound from '../../assets/sounds/trash.wav'
 import dingSound from '../../assets/sounds/ding.wav'
 import wrongSound from '../../assets/sounds/wrong.wav'
 
-export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
-    const [playStaple] = useSound(stapleSound)
+export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr, resetPaper, paperString}) {
     const [playPaperPlace] = useSound(paperPlaceSound)
     const [playBin] = useSound(binSound)
     const [playWrong] = useSound(wrongSound)
@@ -36,6 +34,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     
     const windowWidth = useWindowWidth();
     const [ orderAnswer, setOrderAnswer ] = orderAnswerArr;
+    const [ staplerModeOn, setStaplerModeOn ] = staplerModeOnArr;
     const [ rules, setRules ] = rulesList
     const [ level, setLevel ] = React.useContext(LevelContext).level
     const [ tutorialState, setTutorialState ] = React.useContext(LevelContext).tutorialState
@@ -52,6 +51,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
     const [activeId, setActiveId] = React.useState(null)
     const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
     const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
+
 
     const [zIndices, setZIndices] = React.useState({});
     const globalZCounter = React.useRef(10);
@@ -83,19 +83,52 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         }
     }, [holdingOutput])
 
+    React.useEffect(() => {
+        // Changes style of the cursor
+        if (staplerModeOn) {
+            console.log("stapler mode on")
+            document.body.classList.add('stapler-cursor');
+
+        } else {
+            document.body.classList.remove('stapler-cursor');        
+        }
+
+        return () => {
+            document.body.classList.remove('stapler-cursor');
+        }
+    }, [staplerModeOn])
+
+    const handleOrderClick = (item) => {
+        // 1. Check if Stapler Mode is active
+        if (staplerModeOn) {
+            // 2. Check if the item is the "correct type" (e.g., paper)
+            if (item.type === 'orders') {
+                // Perform the stapling action
+                console.log("Stapled the item!");
+                setStaplerModeOn(false)
+                processResponseNoDrag(item)
+            } else {
+                console.log("You can't staple this! its a " + item.type);
+            }
+            setTutorialState('stapled-response')
+            return; // Stop here so we don't trigger the normal click behavior
+        }
+    }
+
     const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
         const currentZ = zIndices[order.id] || 10;
-        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}}>
+        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={() => handleOrderClick(order)}>
             <span className='character'>{order.text}</span>
         </Order>
     })
 
-    const answerList = orderAnswer.find(container => container.id === 'answers').items.map(answer => {
-        const currentZ = zIndices[answer.id] || 10;
-        return <Answer id={answer.id} key={answer.id} active={answer.id === activeId} style={{zIndex: currentZ}}>
-            <span className='character'>{answer.text}</span>
-        </Answer>
-    })
+    // Deprecated answer slips
+    // const answerList = orderAnswer.find(container => container.id === 'answers').items.map(answer => {
+    //     const currentZ = zIndices[answer.id] || 10;
+    //     return <Answer id={answer.id} key={answer.id} active={answer.id === activeId} style={{zIndex: currentZ}}>
+    //         <span className='character'>{answer.text}</span>
+    //     </Answer>
+    // })
 
     const responsesList = orderAnswer.find(container => container.id === 'responses').items.map(response => {
         const currentZ = zIndices[response.id] || 10;
@@ -104,25 +137,28 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
 
     })
 
-    const orderItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'orders')
-    const answerItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'answers')
-    const staplerItemsElements = (
-        <>
-            <div className='stapler-drop'>
-                {orderItem ? 
-                <div style={{fontSize: 24}}>{orderItem.text}</div>
-                : <span>Order's go here!</span>}
-            </div>
-            <div className='stapler-drop'>
-                {answerItem ? 
-                <div style={{fontSize: 24}}>{answerItem.text}</div>
-                : <span>Answer's go here!</span>}
-            </div>
-            {orderItem && answerItem ? 
-            <button className='stapler-btn' onClick={createResponse}>Staple</button>
-            : null}
-        </>
-    )
+    // Constants to keep track of order and answer items
+    // const orderItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'orders')
+    // const answerItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'answers')
+
+    // HTML code for stapler which has been deprecated
+    // const staplerItemsElements = (
+    //     <>
+    //         <div className='stapler-drop'>
+    //             {orderItem ? 
+    //             <div style={{fontSize: 24}}>{orderItem.text}</div>
+    //             : <span>Order's go here!</span>}
+    //         </div>
+    //         <div className='stapler-drop'>
+    //             {answerItem ? 
+    //             <div style={{fontSize: 24}}>{answerItem.text}</div>
+    //             : <span>Answer's go here!</span>}
+    //         </div>
+    //         {orderItem && answerItem ? 
+    //         <button className='stapler-btn' onClick={createResponseNoDrag}>Send Order</button>
+    //         : null}
+    //     </>
+    // )
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -142,36 +178,34 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         )?.id;
     }
 
-
-    function createResponse() {
-        playStaple()
-        setTutorialState('stapled-response')
-        setOrderAnswer(prev => {
-            return prev.map(c => {
-                if (c.id === 'stapler') {
-                    return {
-                        ...c,
-                        items: []
-                    }
-                }
-                if (c.id === 'responses') {
-                    return {
-                        ...c,
-                        items: [
-                            ...c.items,
-                            {
-                                id: newId(),
-                                order: orderItem.text,
-                                answer: answerItem.text,
-                                type: 'responses' 
-                            }
-                        ]
-                    }
-                }
-                return c
-            })
-        })
-    }
+    // function createResponse() {
+    //     playStaple()
+    //     setTutorialState('stapled-response')
+    //     setOrderAnswer(prev => {
+    //         return prev.map(c => {
+    //             if (c.id === 'stapler') {
+    //                 return {
+    //                     ...c,
+    //                     items: []
+    //                 }
+    //             }
+    //             if (c.id === 'responses') {
+    //                 return {
+    //                     ...c,
+    //                     items: [
+    //                         {
+    //                             id: newId(),
+    //                             order: orderItem.text,
+    //                             answer: answerItem.text,
+    //                             type: 'responses' 
+    //                         }
+    //                     ]
+    //                 }
+    //             }
+    //             return c
+    //         })
+    //     })
+    // }
 
     const bringNoteToFront = (id) => {
         // Increment the global counter
@@ -396,6 +430,42 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         }
 
     }
+    
+
+    function processResponseNoDrag(order) {
+        const receivedResponse = {
+                                id: newId(),
+                                order: order.text,
+                                answer: paperString,
+                                type: 'responses' 
+                            }
+        const question = rules.active.find((rule) => rule.order === receivedResponse.order)
+        const xpGainedPerOrder = 30;
+        
+        // Check if question can be found first (because of tutorial q being deleted)
+        if (question && question.answer === receivedResponse.answer) {
+            playDing()
+            updateLevel(xpGainedPerOrder)
+        } else {
+            playWrong()
+        }
+        // reset paper and remove order
+        // NEEDS TO ONLY REMOVE SELECTED ORDER
+        setOrderAnswer(prev => {
+            return prev.map(c => {
+                if (c.id === 'orders') {
+                    return {
+                        ...c,
+                        items: c.items.filter(item => item.text != order.text)
+                    }
+                }
+                return c
+            })
+        })
+        resetPaper()
+
+    }
+
 
     function processResponse() {
         const receivedResponse = orderAnswer[orderAnswerContainer.PAPERCONTAINER].items[0];
@@ -435,7 +505,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
             <div>
                 {orderList}
 
-                {answerList}
+                {/* {answerList} */}
 
                 {responsesList}
             </div>
@@ -458,7 +528,8 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
                 </div>
                 
             </div>
-            <div className='stapler'>
+            {/* Stapler UI is deprecated */}
+            {/* <div className='stapler'>
                 <Droppable 
                     id='stapler' 
                     className='stapler-ui' 
@@ -467,7 +538,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
                     >
                     {staplerItemsElements}
                 </Droppable>
-            </div>
+            </div> */}
         
         </DndContext>
     )

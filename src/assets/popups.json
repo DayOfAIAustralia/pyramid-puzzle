@@ -96,18 +96,18 @@
         "actions": 3
       },
       {
-        "text": "**Step 5:** Amazing, now that your answer is ready, click the **right side** of the paper to turn it into an answer slip.",
+        "text": "**Step 5:** Great! Now both of those paper slips are ready to combine. Click on the **stapler** to activate **stapler mode**.",
         "buttons": [
           {
             "id": 1,
-            "text": "I've made the new piece of paper.",
+            "text": "They're stapled.",
             "goto": 9
           }
         ],
-        "actions": 4
+        "actions": 5
       },
       {
-        "text": "**Step 6:** Great! Now both of those paper slips are ready to combine. Click on the **stapler** to open it.",
+        "text": "**Step 6:** Fantastic, now you can click the highlighted order to complete the response and submit the order!",
         "buttons": [
           {
             "id": 1,
@@ -115,29 +115,7 @@
             "goto": 10
           }
         ],
-        "actions": 5
-      },
-      {
-        "text": "**Step 7:** Fantastic, now you can drag both the **request** and your **response** onto the stapler menu, and a button will appear which you can use to staple them together!",
-        "buttons": [
-          {
-            "id": 1,
-            "text": "They're stapled.",
-            "goto": 11
-          }
-        ],
         "actions": 7
-      },
-      {
-        "text": "**Step 8:** Now, the final step is to drag your completed order to the **right side**.\n\nA menu will appear where you can either bin it or **finish the job**.",
-        "buttons": [
-          {
-            "id": 1,
-            "text": "Ok great, done.",
-            "goto": 12
-          }
-        ],
-        "actions": 6
       },
       {
         "text": "### 🎉 Tutorial Complete!\n\nI think you're ready to do this for real.\n\nKeep a look out on the top left to keep track of how you're progressing. Check out the rulebook popout to see all the new rules, pay attention to the bottom of it which lets you swap pages.\n\n We'll be explaining the meaning of all this labour soon. Good luck!\n\n*P.S. If you ever forget how to play, you can click the help button in the top right for a quick reminder.*",

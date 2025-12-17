@@ -25,7 +25,7 @@ function App() {
 
   const [startUpdate, setStartUpdate] = useState(false)
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   const [gameOver, setGameOver] = useState(false)
 

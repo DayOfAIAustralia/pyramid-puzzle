@@ -12,6 +12,7 @@ import bookOpenSound from '../../assets/sounds/bookOpen.wav'
 import bookCloseSound from '../../assets/sounds/bookClose.wav'
 import swooshSound from '../../assets/sounds/swoosh.wav'
 import tileSound from '../../assets/sounds/tile.wav'
+import stapleSound from '../../assets/sounds/stapler.wav'
 import staplerOpenSound from '../../assets/sounds/staplerOpen.wav'
 import hornSound from '../../assets/sounds/confetti.wav'
 
@@ -43,7 +44,8 @@ export default function Desk({orderAnswerArr}) {
     const [playSwoosh] = useSound(swooshSound)
     const [playTile] = useSound(tileSound)
     const [playHorn] = useSound(hornSound)
-    const [playOpenStapler] = useSound(staplerOpenSound)
+    const [playStaplerOpen] = useSound(staplerOpenSound)
+    
 
     const [ tutorialState, setTutorialState ] = React.useContext(LevelContext).tutorialState
     const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
@@ -53,7 +55,8 @@ export default function Desk({orderAnswerArr}) {
     const [wheelData, setWheelData] = React.useState({})
     const [winningNumber, setWinningNumber] = React.useState()
     const consideredRule = React.useRef()
-    const [staplerOpen, setStaplerOpen] = React.useState(false)
+    const [staplerModeOn, setStaplerModeOn] = React.useState(false)
+    
     const [mustSpin, setMustSpin] = React.useState(false)
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
     const [characters, setCharacters] = React.useState([
@@ -267,7 +270,7 @@ export default function Desk({orderAnswerArr}) {
         savedCallback.current = generateNewOrder;
     }, [generateNewOrder]);
 
-    const orderDelay = 25 * 1000; // 25 seconds
+    const orderDelay = 15 * 1000; // 15 seconds
 
     React.useEffect(() => {
         if (!currentlyPlaying) return;
@@ -407,13 +410,10 @@ export default function Desk({orderAnswerArr}) {
     }
 
     function toggleStapler() {
-        console.log(startUpdate)
-        console.log(tutorialState)
-        if (!startUpdate && tutorialState != "slip-created") return;
-
-        playOpenStapler()
+        if (!startUpdate && tutorialState != "filled-paper") return;
+        playStaplerOpen()
         setTutorialState('stapler-open')
-        setStaplerOpen(prev => !prev)
+        setStaplerModeOn(prev => !prev)
     }
     
 
@@ -437,6 +437,24 @@ export default function Desk({orderAnswerArr}) {
         if (item) return item
         }
         return null
+    }
+
+    function resetPaper() {
+        setCharacters(containers => {
+            return containers.map(container => {
+                if (container.id === 'paper') {
+                    return {
+                        id: 'paper',
+                        items: []
+                    }
+                } else return container
+            })
+        })
+    }
+
+    function collectCharacters(items) {
+        const charList = items.map(item => item.character);
+        return charList.join("")
     }
 
     function handleDragStart(event) {
@@ -624,48 +642,29 @@ export default function Desk({orderAnswerArr}) {
         )
     }
 
+    // function createAnswer() {
+    //     if (characters[characterContainer.PAPER].items.length === 0) return;
+    //     playRuffle()
+    //     setTutorialState('slip-created')
+    //     setOrderAnswer(prev => {
+    //         return prev.map(container => {
+    //             if (container.id !== 'answers') return container
+    //             return {
+    //                 ...container,
+    //                 items: [
+    //                     ...container.items,
+    //                     {
+    //                         id: newId(),
+    //                         text: collectCharacters(characters[characterContainer.PAPER].items),
+    //                         type: "answers"
+    //                     }
+    //                 ]
+    //             }
+    //         })
 
-    function resetPaper() {
-        setCharacters(containers => {
-            return containers.map(container => {
-                if (container.id === 'paper') {
-                    return {
-                        id: 'paper',
-                        items: []
-                    }
-                } else return container
-            })
-        })
-    }
-
-    function collectCharacters(items) {
-        const charList = items.map(item => item.character);
-        return charList.join("")
-    }
-
-    function createAnswer() {
-        if (characters[characterContainer.PAPER].items.length === 0) return;
-        playRuffle()
-        setTutorialState('slip-created')
-        setOrderAnswer(prev => {
-            return prev.map(container => {
-                if (container.id !== 'answers') return container
-                return {
-                    ...container,
-                    items: [
-                        ...container.items,
-                        {
-                            id: newId(),
-                            text: collectCharacters(characters[characterContainer.PAPER].items),
-                            type: "answers"
-                        }
-                    ]
-                }
-            })
-
-        })
-        resetPaper()
-    }
+    //     })
+    //     resetPaper()
+    // }
 
     // Opaque pixel hover detection
     React.useEffect(() => {
@@ -759,7 +758,7 @@ export default function Desk({orderAnswerArr}) {
                 
             </div>}
             <DeskOverlay orderAnswerArr = {[orderAnswer, setOrderAnswer]} rulesList = {[rules, setRules]} 
-                staplerOpen = {staplerOpen}/>
+                staplerModeOnArr = {[staplerModeOn, setStaplerModeOn]} resetPaper={resetPaper} paperString= {collectCharacters(characters[characterContainer.PAPER].items)}/>
 
             <section id='desk'>
                 {/* Gives space for the button which is used in overlay */}
@@ -785,7 +784,8 @@ export default function Desk({orderAnswerArr}) {
             >
                 <div className='orders'></div>
                 <div className='workspace'>
-                    <button className='paper-furl-btn' onClick={createAnswer}></button>
+                    {/* Paper furl feature has been removed */}
+                    {/* <button className='paper-furl-btn' onClick={createAnswer}></button> */}
                     <PaperDroppable container={characters.find(container => container.id === "paper")} />
                 </div>
 

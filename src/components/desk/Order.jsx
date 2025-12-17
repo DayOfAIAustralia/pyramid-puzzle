@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useWindowHeight } from '@react-hook/window-size'
 
 
-export default function Order({ children, id, slide, active, style }) {
+export default function Order({ children, id, slide, active, style, onClick }) {
     const [show, setShow] = useState(false)
     const elementRef = useRef(null);
 
@@ -32,7 +32,7 @@ export default function Order({ children, id, slide, active, style }) {
             ref={elementRef}
         >
             
-            <article className={`paper order ${slide ? (!show ? "paper-off-screen" : "paper-on-screen") : ""} `}>
+            <article className={`paper order ${slide ? (!show ? "paper-off-screen" : "paper-on-screen") : ""} `} onClick={onClick}>
                 <span>Please Respond:</span>
                 {children}
             </article>
