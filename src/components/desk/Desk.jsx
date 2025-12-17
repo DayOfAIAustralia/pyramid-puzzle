@@ -446,6 +446,29 @@ export default function Desk({orderAnswerArr}) {
         return charList.join("")
     }
 
+    const handleTileClick = (id = NULL, character, type) => {
+        if (type == 'dictionary') {
+            playTile()
+        } else {
+            playSwoosh()
+        }
+        setCharacters(prev => {
+            return prev.map(c => {
+                if (type === 'dictionary') {
+                    if (c.id === 'paper') {
+                        c.items = [...c.items, {id: newId(), character: character}]
+                    }
+                } else {
+                    if (c.id === 'paper') {
+                        c.items = c.items.filter(tile => tile.id != id)              
+                    }
+                }
+                return c;
+            })
+            
+        })
+    }
+
     function handleDragStart(event) {
         setActiveId(event.active.id)
         if (event.active.id === 'rulebook-handle') {
@@ -775,7 +798,10 @@ export default function Desk({orderAnswerArr}) {
                 <div className='workspace'>
                     {/* Paper furl feature has been removed */}
                     {/* <button className='paper-furl-btn' onClick={createAnswer}></button> */}
-                    <PaperDroppable container={characters.find(container => container.id === "paper")} />
+                    <PaperDroppable 
+                        container={characters.find(container => container.id === "paper")} 
+                        handleTileClick={handleTileClick}
+                    />
                 </div>
 
                 <button className="dictionary" onClick={openDictionary}>
@@ -787,6 +813,7 @@ export default function Desk({orderAnswerArr}) {
                     disabled={parentDisabled}
                     rules={rules}
                     zIndex={dictionaryZIndex}
+                    handleTileClick={handleTileClick}
                 />
                 
                 <button className="rules" onClick={openRuleBook}>

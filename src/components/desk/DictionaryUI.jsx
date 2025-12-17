@@ -5,10 +5,16 @@ import Droppable from '../base_dnd/Droppable'
 import { useWindowHeight, useWindowWidth } from '@react-hook/window-size'
 
 
-export default function DictionaryUI({ dictionary, ref, disabled, rules, zIndex }) {
+export default function DictionaryUI({ dictionary, ref, disabled, rules, zIndex , handleTileClick}) {
     const characterElements = dictionary.items.map(char => {
         if (!rules.active.find(rule => Array.from(rule.answer).includes(char.character))) return null;
-        return <SortableDraggable key={char.id} id={char.id} className='character' type='character'>{char.character}</SortableDraggable>        
+        return <SortableDraggable 
+                    key={char.id} 
+                    id={char.id} 
+                    className='character'
+                    type='character'
+                    onClick={() => handleTileClick(char.id, char.character, "dictionary")}>
+            {char.character}</SortableDraggable>        
     })
 
     return (
