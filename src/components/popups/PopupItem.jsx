@@ -1,16 +1,16 @@
 import { useEffect, useContext, useState } from 'react'
-import { TutorialContext, LevelContext } from './Context'
+import { TutorialContext, LevelContext } from '../Context'
 import axios from "axios"
 import useSound from 'use-sound';
 import Markdown from 'react-markdown'
 import { AnimatePresence, motion } from 'framer-motion'
 import TextHighlighter from './TextHighlighter';
-import swooshSound from '../assets/sounds/swoosh.wav'
 import { RiMailSendLine } from "react-icons/ri";
 import { useWindowWidth, useWindowHeight } from '@react-hook/window-size'
 import Confetti from 'react-confetti'
 
-import confettiSound from '../assets/sounds/confetti.wav'
+import swooshSound from '../../assets/sounds/swoosh.wav'
+import confettiSound from '../../assets/sounds/confetti.wav'
 
 export default function PopupItem({text, buttons, updateDialogue, actions, orderAnswerArr, help=false, setGameOver}) {
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
@@ -32,12 +32,11 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
     const [arrowMoveDirection, setArrowMoveDirection] = useState('vertical')
     const [key, setKey] = useState(1)
     const [celebration, setCelebration] = useState(false)
-    const [celebrationButton, setCelebrationButton] = useState(false)
 
     const [playSwoosh] = useSound(swooshSound)
     const [playConfetti] = useSound(confettiSound)
 
-    // Non button progression
+    // Non button progression for tutorial
     useEffect(() => {
         if (actions === 0 && tutorialState === 'paper-dragged') {
             updateDialogue(buttons[0].goto)
@@ -135,10 +134,11 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
 
             setStartUpdate(true)
         } else if (actions === 10) {
-            setCelebrationButton(true)
+            updateCelebration()
         }
     }, [actions])
 
+    // Handles movement of arrow during tutorial
     const moveDistance = 15;
     let movementKeyframes;
     switch (arrowMoveDirection) {
@@ -186,6 +186,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
         }}
     />
 
+    // Changes placement of popup during tutorial 
     let popupStyle
     let dataStyle
     let btnClass = "popup-btns-bottom"
@@ -206,6 +207,7 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
         }
     } 
 
+    // Requesting AI Help functions
     function changeHighlighting() {
         setKey(prev => prev + 1)
         setIsHighlighting(prev => !prev)
@@ -246,19 +248,23 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
         helpImage = "/questionHighlight.png"
     }
 
+    // End of game celebration and reset functions
     const confetti = <Confetti
         width={useWindowWidth()}
         height={useWindowHeight()}
         />
 
     function updateCelebration() {
+        setKey(prev => prev + 1)
         playConfetti()
         setCelebration(true)
         setGameOver(true)
+    }
 
+    function resetGame() {
+        window.location.reload();
     }
     
-
     return (
         <>
         {showTutorialArrow && arrow}
@@ -273,18 +279,41 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                         </div>
                     </TextHighlighter>
                 </div>
+
+                {/* Button for final celebration and end of game */}
+                {celebration && 
+                <motion.div 
+                    key={`end-button-${key}`}
+                    className={`popup-btns ${btnClass}`}
+                    variants={fadeVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit">
+                        <button onClick={resetGame}>{"Reset Game 🎮"}</button>
+                </motion.div>}
+
+                {/* Help button in top right corner */}
+                {help && !celebration &&
+                <motion.button
+                    key={key}
+                    className="popup-help"
+                    onClick={changeHighlighting}
+                    disabled={helpDisabled}
+                    onMouseEnter={() => setHelpButtonHover(true)}
+                    onMouseLeave={() => setHelpButtonHover(false)}
+                    variants={fadeVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    >
+                        <img src={helpImage} alt="question button" />
+                </motion.button>
+                }
+
                 <AnimatePresence mode="wait"> {/* 'mode="wait"' ensures one animation finishes before the next starts if both change */}
-                    {celebrationButton &&
-                        <motion.div 
-                            className={`popup-btns ${btnClass}`}
-                            variants={fadeVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit">
-                                <button key={1} disabled={celebration} className={celebration ? 'btn-disabled' : ''} onClick={updateCelebration}>Celebrate! 🎉</button>
-                        </motion.div>}
                     {useButton && !showSendHelp && 
                         <motion.div 
+                            key={"help-btn"}
                             className={`popup-btns ${btnClass}`}
                             variants={fadeVariants}
                             initial="hidden"
@@ -293,22 +322,6 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                                 {buttonElements}
                         </motion.div>
                     }
-                    {help && (
-                        <motion.button
-                        key={key}
-                        className="popup-help"
-                        onClick={changeHighlighting}
-                        disabled={helpDisabled}
-                        onMouseEnter={() => setHelpButtonHover(true)}
-                        onMouseLeave={() => setHelpButtonHover(false)}
-                        variants={fadeVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        >
-                        <img src={helpImage} alt="question button" />
-                        </motion.button>
-                    )}
 
                     {showSendHelp && (
                         <motion.button
@@ -320,10 +333,10 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
                         animate="visible"
                         exit="exit"
                         >
-                        <RiMailSendLine size="1.5em" />
+                            <RiMailSendLine size="1.5em" />
                         </motion.button>
                     )}
-                    </AnimatePresence>
+                </AnimatePresence>
             </section>
             {helpVisible &&
                 <div className="help-box">

@@ -4,12 +4,12 @@ import {  AnimatePresence, motion } from 'framer-motion'
 
 import ChineseRoom from './components/room/ChineseRoom'
 import Desk from './components/desk/Desk'
-import Popups from './components/Popups'
+import Popups from './components/popups/Popups'
 
 import './components/room/ChineseRoom.css'
 import './components/desk/Desk.css'
 
-import "./components/Popup.css"
+import "./components/popups/Popup.css"
 
 function App() {
 
@@ -19,6 +19,7 @@ function App() {
     xpRequired: 90
   })
 
+  // Global context values needed across components
   const [tutorialState, setTutorialState] = useState(null)
 
   const [currentlyPlaying, setCurrentlyPlaying] = useState(false)
@@ -29,18 +30,18 @@ function App() {
 
   const [gameOver, setGameOver] = useState(false)
 
+  // Preloading work
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500); // 1.5 second loading screen
+    }, 1500); // 1.5 second loading screen to ensure assets are downloaded
 
     return () => clearTimeout(timer);
   }, []);
 
+  // Preloads images to prevent game stuttering
   useEffect(() => {
     const imagesToPreload = [
-      '/bin.png',
-      '/paperContainer.png',
       '/arrow.png',
       '/question.png',
       '/dictionaryOpen.png',
@@ -52,6 +53,10 @@ function App() {
     imagesToPreload.forEach((image) => new Image().src = image);
   }, []);
 
+  // Contains the orders that are added throughout the game
+  // Note: there is no good reason for this to be an array of objects anymore
+  // but is a relic of the original game system, just index the array from 0 to access
+  // the order object
   const [orderAnswer, setOrderAnswer] = useState([
     {
     id: "orders",
@@ -62,6 +67,7 @@ function App() {
 
   return (
     <>
+      {/* Warning to use landscape mode */}
       <div className="popups rotate-device-overlay" style={{backgroundImage: 'url("/desk.jpg")', zIndex: 9999}}>
           <div className="popup">
           <section className="popup-data" style={{fontSize: "30px"}}>
@@ -77,6 +83,8 @@ function App() {
           
         </div>
       </div>
+
+      {/* Loading screen */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -125,6 +133,7 @@ function App() {
         )}
       </AnimatePresence>
 
+      {/* Game context and components */}
       <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState]
       }}>
         <Popups orderAnswerArr={[orderAnswer, setOrderAnswer]} setGameOver={setGameOver}/>

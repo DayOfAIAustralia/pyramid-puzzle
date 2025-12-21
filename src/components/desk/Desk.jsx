@@ -48,9 +48,21 @@ export default function Desk({orderAnswerArr}) {
     const [winningNumber, setWinningNumber] = React.useState()
     const consideredRule = React.useRef()
     const [staplerModeOn, setStaplerModeOn] = React.useState(false)
+    const [activeId, setActiveId] = React.useState(null)
+    const [parentDisabled, setParentDisabled] = React.useState(false)
+    const dictionaryUIRef = React.useRef(null)
+    const dictionaryImg = React.useRef(null)
+    const ruleBookUIRef = React.useRef(null)
+    const ruleBookImg = React.useRef(null)
+    const staplerRef = React.useRef(null)
+    const [isDictionaryHovered, setIsDictionaryHovered] = React.useState(false);
+    const [isRuleBookHovered, setIsRuleBookHovered] = React.useState(false);
+    const [isStaplerHovered, setIsStaplerHovered] = React.useState(false);
     
     const [mustSpin, setMustSpin] = React.useState(false)
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
+
+    // Dictionary comes preloaded with all potential values
     const [characters, setCharacters] = React.useState([
     {
         id: "dictionary",
@@ -123,6 +135,7 @@ export default function Desk({orderAnswerArr}) {
     }
     ])
 
+    // All potential rules for the first few levels are predefined
     const [rules, setRules] = React.useState({
         inactive: [
             { id: 1, order: "𓂀𓏐𓈖", answer: "𓆓𓃾𓆣" },
@@ -155,6 +168,9 @@ export default function Desk({orderAnswerArr}) {
     const [dictionaryZIndex, setDictionaryZIndex] = React.useState(10);
     const [rulebookZIndex, setRulebookZIndex] = React.useState(10);
 
+    // ORDER FUNCTIONS -----------------------------------------------------
+
+    // Fills the rulebook with new rules once the tutorial ends
     React.useEffect(() => {
         if (!startUpdate) return
         // Removes tutorial example
@@ -165,13 +181,15 @@ export default function Desk({orderAnswerArr}) {
         
     }, [startUpdate]);
 
+    // Instantly creates an order after a new level starts
     React.useEffect(() => {
         if (currentlyPlaying === true) {
             generateNewOrder()
         }
     }, [currentlyPlaying])
 
-
+    // Creates the order slips the user interacts with, ensures no duplicate orders will be generated
+    // until all options are exhausted
     const generateNewOrder = React.useCallback(() => {
         if (!rules.active?.length) return;
 
@@ -242,17 +260,7 @@ export default function Desk({orderAnswerArr}) {
 
     }, [rules.active, orderAnswer, seenRules]); 
 
-    const [activeId, setActiveId] = React.useState(null)
-    const [parentDisabled, setParentDisabled] = React.useState(false)
-    const dictionaryUIRef = React.useRef(null)
-    const dictionaryImg = React.useRef(null)
-    const ruleBookUIRef = React.useRef(null)
-    const ruleBookImg = React.useRef(null)
-    const staplerRef = React.useRef(null)
-    const [isDictionaryHovered, setIsDictionaryHovered] = React.useState(false);
-    const [isRuleBookHovered, setIsRuleBookHovered] = React.useState(false);
-    const [isStaplerHovered, setIsStaplerHovered] = React.useState(false);
-
+    
     const savedCallback = React.useRef(generateNewOrder);
 
     React.useLayoutEffect(() => {
@@ -260,6 +268,10 @@ export default function Desk({orderAnswerArr}) {
     }, [generateNewOrder]);
 
     const orderDelay = 15 * 1000; // 15 seconds
+
+    // END ORDER FUNCTIONS -----------------------------------------------------
+
+    // RULE FUNCTIONS -----------------------------------------------------
 
     React.useEffect(() => {
         if (!currentlyPlaying) return;
@@ -308,29 +320,9 @@ export default function Desk({orderAnswerArr}) {
         })
     }
 
-    function updateRule(order) {
-        let data = [];
-        for (let i = 0; i < 10; i++) {
-            let prizeChars = [];
-            for (let j = 0; j < 3; j++) {
-                const randInd = Math.floor(Math.random() * characters[characterContainer.DICTIONARY].items.length)
-                prizeChars.push(characters[characterContainer.DICTIONARY].items[randInd].character)
-            }
+    // END RULE FUNCTIONS -----------------------------------------------------
 
-            data.push({ option: prizeChars.join('') })
-        }
-        consideredRule.current = order
-        setWheelData(data)
-        setWinningNumber(Math.floor(Math.random() * data.length))
-        setWheelPresent(true)
-        playSpin()
-
-        requestAnimationFrame(() => {
-            setMustSpin(true);
-        });
-
-    }
-
+    // SPIN WHEEL FUNCTIONS ---------------------------------------------------
     function finishSpinning() { 
         playHorn()
         setTimeout(() => {
@@ -350,14 +342,28 @@ export default function Desk({orderAnswerArr}) {
 
     }
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 8
+    function updateRule(order) {
+        let data = [];
+        for (let i = 0; i < 10; i++) {
+            let prizeChars = [];
+            for (let j = 0; j < 3; j++) {
+                const randInd = Math.floor(Math.random() * characters[characterContainer.DICTIONARY].items.length)
+                prizeChars.push(characters[characterContainer.DICTIONARY].items[randInd].character)
             }
-        }),
-        useSensor(KeyboardSensor)
-    )
+            data.push({ option: prizeChars.join('') })
+        }
+        consideredRule.current = order
+        setWheelData(data)
+        setWinningNumber(Math.floor(Math.random() * data.length))
+        setWheelPresent(true)
+        playSpin()
+
+        requestAnimationFrame(() => {
+            setMustSpin(true);
+        });
+
+    }
+    // END SPIN WHEEL FUNCTIONS ---------------------------------------------------
 
     function openDictionary() {
         if (!startUpdate && tutorialState != "rulebook-open") return;
@@ -376,7 +382,7 @@ export default function Desk({orderAnswerArr}) {
         }
     }
 
-    
+    // DESK OBJECT INTERACTIONS ---------------------------------------------------
     function openRuleBook() {
         if (!startUpdate && tutorialState != "paper-dragged") return;
 
@@ -412,10 +418,11 @@ export default function Desk({orderAnswerArr}) {
         )?.id;
     }
 
+    // END DESK OBJECT INTERACTIONS ---------------------------------------------------
 
+    // Gets currently held object by user
     const getActiveItem = () => {
         let item;
-        
         for (const container of characters) {
             item = container.items.find(item => 
             item.id === activeId
@@ -425,6 +432,7 @@ export default function Desk({orderAnswerArr}) {
         return null
     }
 
+    // Removes all tiles from the paper
     function resetPaper() {
         setCharacters(containers => {
             return containers.map(container => {
@@ -438,11 +446,13 @@ export default function Desk({orderAnswerArr}) {
         })
     }
 
+    // Helper function to turn paper tiles into a readable string
     function collectCharacters(items) {
         const charList = items.map(item => item.character);
         return charList.join("")
     }
 
+    // Non drag method for moving tiles between dictionary and paper
     const handleTileClick = (id = NULL, character, type) => {
         if (type == 'dictionary') {
             playTile()
@@ -469,6 +479,8 @@ export default function Desk({orderAnswerArr}) {
         }
     }
 
+    // DnD KIT DRAG FUNCTIONALITY --------------------------------------------------
+    
     function handleDragStart(event) {
         setActiveId(event.active.id)
         if (event.active.id === 'rulebook-handle') {
@@ -482,13 +494,14 @@ export default function Desk({orderAnswerArr}) {
     function handleDragOver(event) {
         const { active, over } = event;
 
+        // If the user has the object in empty space
         if (!over) return;
 
         const activeId = active.id;
         const overId = over.id;
 
+        // No drag over events for dictionary or rulebook (only tiles)
         if (active.id === 'dictionary-handle' || active.id === 'rulebook-handle') return;
-
 
         const activeContainerId = findCharacterContainerId(activeId)
         const overContainerId = findCharacterContainerId(overId)
@@ -506,8 +519,6 @@ export default function Desk({orderAnswerArr}) {
             
             const activeItem = activeContainer.items.find(item => item.id === activeId)
             if (!activeItem) return prev;
-
-            
 
             const newContainers = prev.map(container => {
                 if (container.id === activeContainerId) {
@@ -630,6 +641,10 @@ export default function Desk({orderAnswerArr}) {
         }
     }
 
+    // END DnD KIT DRAG FUNCTIONALITY --------------------------------------------------
+
+    // Removes duplicate tiles in a dictionary that may be obtained by returning tiles
+    // from the paper
     function normaliseDictionary(c) {
         const seen = new Set();
         const charsSet = c.items.filter(char => {
@@ -646,6 +661,7 @@ export default function Desk({orderAnswerArr}) {
         }
     }
 
+    // Overlay for what is shown while holding a tile
     function CharacterOverlay({ children, className }) {
         return (
             <div className={className}>
@@ -654,7 +670,8 @@ export default function Desk({orderAnswerArr}) {
         )
     }
 
-    // Opaque pixel hover detection
+    // Opaque pixel hover detection - Ensures that buttons can only be clicked where the visible 
+    // pixels are, rather than the whole box the image takes up
     React.useEffect(() => {
         const setupPixelHover = (imgRef, canvasRef, setHovered) => {
             const image = imgRef.current;
@@ -728,8 +745,19 @@ export default function Desk({orderAnswerArr}) {
         };
     }, []);
 
+    // Sensor used with DnD Kit to allow picking up tiles, dictionary, and rulebook
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8
+            }
+        }),
+        useSensor(KeyboardSensor)
+    )
+
     return (
         <>
+            {/* Spinwheel for final elvel */}
             {wheelPresent && wheelData.length > 0 && 
             <div className="spinner-wheel">
                 <Wheel
@@ -745,81 +773,86 @@ export default function Desk({orderAnswerArr}) {
                 />
                 
             </div>}
+
+            {/* Desk overlay component for order slips */}
             <DeskOverlay orderAnswerArr = {[orderAnswer, setOrderAnswer]} rulesList = {[rules, setRules]} 
                 staplerModeOnArr = {[staplerModeOn, setStaplerModeOn]} resetPaper={resetPaper} paperString= {collectCharacters(characters[characterContainer.PAPER].items)}/>
 
+            {/* Desk for stapler, paper, and dictionary buttons */}
             <section id='desk'>
-                {/* Gives space for the button which is used in overlay */}
-                <button className='stapler-2' onClick={toggleStapler}>
+                {/* Stapler Space */}
+                <button className='stapler' onClick={toggleStapler}>
                     <img src='stapler.png' alt='stapler button' className={isStaplerHovered ? 'hovered' : ''} ref={staplerRef}></img>
                 </button>
             
-            <DndContext
-                collisionDetection={closestCenter}
-                sensors={sensors}
-                autoScroll={false}
-                modifiers={[restrictToWindowEdges]} 
-                onDragStart={(event) => {
-                    event.active.data.current.type === 'character' ? setParentDisabled(true) : null
-                    handleDragStart(event)
-                }}
-                onDragOver={handleDragOver}
-                onDragEnd={({ active, over, delta }) => {
-                    setParentDisabled(false);
-                    handleCharacterDragEnd({active, over})
+                <DndContext
+                    collisionDetection={closestCenter}
+                    sensors={sensors}
+                    autoScroll={false}
+                    modifiers={[restrictToWindowEdges]} 
+                    onDragStart={(event) => {
+                        event.active.data.current.type === 'character' ? setParentDisabled(true) : null
+                        handleDragStart(event)
+                    }}
+                    onDragOver={handleDragOver}
+                    onDragEnd={({ active, over, delta }) => {
+                        setParentDisabled(false);
+                        handleCharacterDragEnd({active, over})
+                        
+                    }}
+                >
+                    {/* Empty Space for orders to come in */}
+                    <div className='orders'></div>
                     
-                }}
-            >
-                <div className='orders'></div>
-                <div className='workspace'>
-                    {/* Paper furl feature has been removed */}
-                    {/* <button className='paper-furl-btn' onClick={createAnswer}></button> */}
-                    <PaperDroppable 
-                        container={characters.find(container => container.id === "paper")} 
+                    {/* Paper Space */}
+                    <div className='workspace'>
+                        <PaperDroppable 
+                            container={characters.find(container => container.id === "paper")} 
+                            handleTileClick={handleTileClick}
+                        />
+                    </div>
+                    
+                    {/* Dictionary Space */}
+                    <button className="dictionary" onClick={openDictionary}>
+                        <img src="dictionary.png" alt='character dictionary' ref={dictionaryImg} className={isDictionaryHovered ? 'hovered' : ''}></img>
+                    </button>
+                    <DictionaryUI 
+                        dictionary={characters.find(container => container.id === "dictionary")} 
+                        ref={dictionaryUIRef} 
+                        disabled={parentDisabled}
+                        rules={rules}
+                        zIndex={dictionaryZIndex}
                         handleTileClick={handleTileClick}
                     />
-                </div>
+                    
+                    {/* Rulebook Space */}
+                    <button className="rules" onClick={openRuleBook}>
+                        <img src="rules.png" alt='rule book' ref={ruleBookImg} className={isRuleBookHovered ? 'hovered' : ''}></img>
+                    </button>
+                    <RuleBook
+                        ref={ruleBookUIRef}
+                        rules={rules}
+                        updateRule={updateRule}
+                        zIndex={rulebookZIndex}
+                    />
 
-                <button className="dictionary" onClick={openDictionary}>
-                    <img src="dictionary.png" alt='character dictionary' ref={dictionaryImg} className={isDictionaryHovered ? 'hovered' : ''}></img>
-                </button>
-                <DictionaryUI 
-                    dictionary={characters.find(container => container.id === "dictionary")} 
-                    ref={dictionaryUIRef} 
-                    disabled={parentDisabled}
-                    rules={rules}
-                    zIndex={dictionaryZIndex}
-                    handleTileClick={handleTileClick}
-                />
-                
-                <button className="rules" onClick={openRuleBook}>
-                    <img src="rules.png" alt='rule book' ref={ruleBookImg} className={isRuleBookHovered ? 'hovered' : ''}></img>
-                
-                </button>
-                <RuleBook
-                    ref={ruleBookUIRef}
-                    rules={rules}
-                    updateRule={updateRule}
-                    zIndex={rulebookZIndex}
-                />
+                    {/* Handles what is seen in users hand and on tile droppable locations */}
+                    <DragOverlay
+                        dropAnimation={{
+                        duration: 150,
+                        easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)'
+                        }}
+                        > 
+                        {activeId && (getActiveItem() !== null) 
+                        ? (
+                        <CharacterOverlay className='draggable'>
+                            {getActiveItem()?.character}
+                        </CharacterOverlay>
+                        ): null}
+                    </DragOverlay>
+                </DndContext>
 
-                <DragOverlay
-                    dropAnimation={{
-                    duration: 150,
-                    easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)'
-                    }}
-                    > 
-                    {activeId && (getActiveItem() !== null) 
-                    ? (
-                    <CharacterOverlay className='draggable'>
-                        {getActiveItem()?.character}
-                    </CharacterOverlay>
-                    ): null}
-                </DragOverlay>
-            </DndContext>
-            
-
-        </section>
-    </>
+            </section>
+        </>
     )
 }

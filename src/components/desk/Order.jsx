@@ -7,14 +7,16 @@ export default function Order({ children, id, slide, active, style, onClick, sta
     const [show, setShow] = useState(false)
     const elementRef = useRef(null);
 
+    // Allows orders to be created that do not slide in from the side (although this
+    // feature is no longer used in the game)
     useEffect(() => {
         if (!slide) return;
         const raf = requestAnimationFrame(() => setShow(true));
         return () => cancelAnimationFrame(raf);
     }, [])
 
+    // Sets random spawn location for new orders
     const windowHeight = useWindowHeight();
-
     const deskTop = windowHeight * 0.5; 
     const estimatedHeight = 80; 
     const spawnableHeight = windowHeight - deskTop - estimatedHeight;
@@ -38,7 +40,7 @@ export default function Order({ children, id, slide, active, style, onClick, sta
                 animate={staplerModeOn ? "glowing" : "static"}
                 variants={{
                     static: { 
-                        filter: "drop-shadow(0 0 0px red)" // or your default shadow
+                        filter: "drop-shadow(0 0 0px red)" // no glow by default
                     },
                     glowing: {
                         filter: [

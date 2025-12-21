@@ -31,13 +31,12 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
     const [activeId, setActiveId] = React.useState(null)
     const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
 
-
     const [zIndices, setZIndices] = React.useState({});
     const globalZCounter = React.useRef(10);
 
-
+    // STAPLER FUNCTIONS ----------------------------------------------------
+    // Cursor update for activating stapler mode
     React.useEffect(() => {
-        // Changes style of the cursor
         if (staplerModeOn) {
             console.log("stapler mode on")
             document.body.classList.add('stapler-cursor');
@@ -60,7 +59,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
                 // Perform the stapling action
                 console.log("Stapled the item!");
                 setStaplerModeOn(false)
-                processResponseNoDrag(item)
+                processResponse(item)
             } else {
                 console.log("You can't staple this! its a " + item.type);
             }
@@ -69,6 +68,45 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         }
     }
 
+
+    function processResponse(order) {
+        const receivedResponse = {
+                                id: newId(),
+                                order: order.text,
+                                answer: paperString,
+                                type: 'responses' 
+                            }
+        const question = rules.active.find((rule) => rule.order === receivedResponse.order)
+        const xpGainedPerOrder = 30;
+        
+        // Check if question can be found first (because of tutorial q being deleted)
+        if (question && question.answer === receivedResponse.answer) {
+            playDing()
+            updateLevel(xpGainedPerOrder)
+        } else {
+            playWrong()
+        }
+
+        // Removes selected order from orders items array
+        setOrderAnswer(prev => {
+            return prev.map(c => {
+                if (c.id === 'orders') {
+                    return {
+                        ...c,
+                        items: c.items.filter(item => item.text != order.text)
+                    }
+                }
+                return c
+            })
+        })
+
+        // Removes tiles from paper
+        resetPaper()
+
+    }
+    // END STAPLER FUNCTIONS ----------------------------------------------------
+
+    // Creates elements of order slips for all the existing orders
     const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
         const currentZ = zIndices[order.id] || 10;
         return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={() => handleOrderClick(order)} staplerModeOn={staplerModeOn}>
@@ -76,15 +114,8 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         </Order>
     })
 
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 8
-            }
-        }),
-        useSensor(KeyboardSensor)
-    )
-
+    
+    // Ensures whichever note has been last clicked it top of the stack
     const bringNoteToFront = (id) => {
         // Increment the global counter
         globalZCounter.current += 1;
@@ -96,7 +127,8 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         }));
     };
 
-    function handleNotesDragStart({ active, over }) {
+    // DnD KIT NOTE DRAG FUNCTIONS ----------------------------------
+    function handleNotesDragStart({ active }) {
         const activeId = active.id;
         setActiveId(activeId)
         bringNoteToFront(activeId)
@@ -116,43 +148,10 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         document.body.classList.remove('dragging-cursor');
 
     }
-    
 
-    function processResponseNoDrag(order) {
-        const receivedResponse = {
-                                id: newId(),
-                                order: order.text,
-                                answer: paperString,
-                                type: 'responses' 
-                            }
-        const question = rules.active.find((rule) => rule.order === receivedResponse.order)
-        const xpGainedPerOrder = 30;
-        
-        // Check if question can be found first (because of tutorial q being deleted)
-        if (question && question.answer === receivedResponse.answer) {
-            playDing()
-            updateLevel(xpGainedPerOrder)
-        } else {
-            playWrong()
-        }
-        // reset paper and remove order
-        // NEEDS TO ONLY REMOVE SELECTED ORDER
-        setOrderAnswer(prev => {
-            return prev.map(c => {
-                if (c.id === 'orders') {
-                    return {
-                        ...c,
-                        items: c.items.filter(item => item.text != order.text)
-                    }
-                }
-                return c
-            })
-        })
-        // removes tiles from paper
-        resetPaper()
+    // END DnD KIT NOTE DRAG FUNCTIONS ----------------------------------
 
-    }
-
+    // Adds xp to level
     function updateLevel(added_xp) {
         setLevel(prev => {
             return {
@@ -162,6 +161,15 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         })
     }
 
+    // DnD Kit sensors for handling slip movement
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8
+            }
+        }),
+        useSensor(KeyboardSensor)
+    )
 
     return (
         <DndContext

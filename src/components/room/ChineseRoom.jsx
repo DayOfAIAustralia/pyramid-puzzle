@@ -23,7 +23,7 @@ export default function ChineseRoom({gameOver}) {
     const [playXp] = useSound(xpSound)
     const [playCelebration] = useSound(celebrationMusic)
 
-    // xp particles
+    // Xp particles
 
     const grantXp = (originEl) => {
         burst(

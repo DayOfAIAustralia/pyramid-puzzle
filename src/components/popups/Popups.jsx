@@ -1,8 +1,7 @@
 import PopupItem from "./PopupItem"
 import "./Popup.css"
-import { LevelContext, TutorialContext } from "./Context"
-import popupsJSON from "../assets/popups.json"
-
+import { LevelContext, TutorialContext } from "../Context"
+import popupsJSON from "../../assets/popups.json"
 
 import React from 'react'
 

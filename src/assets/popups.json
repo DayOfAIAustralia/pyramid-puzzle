@@ -239,7 +239,7 @@
       },
       {
         "id": 7,
-        "text": "Well that's the interesting thing. Because from the outside you would **appear to understand** Heiroglpyhs. \n\nGiven enough rules, anyone who knew how to read and write them can ask you any question they want, and you could to respond with the right thing. Whether Geography, History, or Math, they could ask you a question and you could respond. \n\n**But, you would never be able to know what your saying.**",
+        "text": "Well that's the interesting thing. Because from the outside you would **appear to understand** Hieroglyphs. \n\nIf you were given a rule for every possible situation, then whether someone is asking you about Geography, History, or Math, you could **always** respond. \n\n**But, you would never know what you're *actually* saying.** You're just following the rulebook!",
         "buttons": [
           {
             "id": 1,
@@ -451,8 +451,19 @@
       {
         "id": 7,
         "text": "This leaves us with the notion that AI as we know it likely won't become **'conscious'**.\n\nIt doesn't discount the idea of new forms of intelligence forming, but just that computers as we've built them today are constrained in this way. \n\nBut this doesn't discount the importance that emerging AI systems will have in **changing the way we live, work, and learn**. Just that, maybe, we should be careful how much we trust a system that literally doesn't know what it is talking about. \n\n**That's the end for now, thanks for playing!** 🥳🎉",
+        "buttons": [ 
+          {
+            "id": 1,
+            "text": "Celebrate! 🎉",
+            "goto": 8
+          }
+        ],
+        "help": true
+      },
+      {
+        "id": 8,
+        "text": "**Thanks for playing!** 🥳🎉",
         "buttons": [],
-        "help": true,
         "actions": 10
       }
     ]
