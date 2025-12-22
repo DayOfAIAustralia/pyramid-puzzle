@@ -1,42 +1,37 @@
 import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, TouchSensor, pointerWithin } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext, useRef, useState } from 'react'
 import { v4 as newId } from 'uuid';
-
-import { useWindowWidth } from '@react-hook/window-size'
 
 import { LevelContext } from '../Context.jsx';
 import Order from './Order.jsx';
 
 import useSound from 'use-sound';
-import paperPlaceSound from '../../assets/sounds/paperPlace.wav'
-import binSound from '../../assets/sounds/trash.wav'
 import dingSound from '../../assets/sounds/ding.wav'
 import wrongSound from '../../assets/sounds/wrong.wav'
 
 export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr, resetPaper, paperString}) {
     const [playWrong] = useSound(wrongSound)
     const [playDing] = useSound(dingSound)
-    
-    const orderAnswerContainer = {
-        ORDER: 0,
-    }   
+
+    const [ tutorialState, setTutorialState ] = useContext(LevelContext).tutorialState
+    const [xpStartLocation, setXpStartLocation] = useContext(LevelContext).xpStartLocation
     
     const [ orderAnswer, setOrderAnswer ] = orderAnswerArr;
     const [ staplerModeOn, setStaplerModeOn ] = staplerModeOnArr;
     const [ rules, setRules ] = rulesList
-    const [ level, setLevel ] = React.useContext(LevelContext).level
-    const [ tutorialState, setTutorialState ] = React.useContext(LevelContext).tutorialState
-    
-    const [activeId, setActiveId] = React.useState(null)
-    const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
+    const [ level, setLevel ] = useContext(LevelContext).level
 
-    const [zIndices, setZIndices] = React.useState({});
-    const globalZCounter = React.useRef(10);
+    const [activeId, setActiveId] = useState(null)
+    const [firstOrderPickup, setFirstOrderPickup] = useState(false);
+
+    const [zIndices, setZIndices] = useState({});
+    const globalZCounter = useRef(10);
+
 
     // STAPLER FUNCTIONS ----------------------------------------------------
     // Cursor update for activating stapler mode
-    React.useEffect(() => {
+    useEffect(() => {
         if (staplerModeOn) {
             console.log("stapler mode on")
             document.body.classList.add('stapler-cursor');
@@ -50,7 +45,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         }
     }, [staplerModeOn])
 
-    const handleOrderClick = (item) => {
+    const handleOrderClick = (e, item) => {
         // 1. Check if Stapler Mode is active
         if (staplerModeOn) {
             if (!paperString) return;
@@ -59,7 +54,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
                 // Perform the stapling action
                 console.log("Stapled the item!");
                 setStaplerModeOn(false)
-                processResponse(item)
+                processResponse(e, item)
             } else {
                 console.log("You can't staple this! its a " + item.type);
             }
@@ -69,7 +64,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
     }
 
 
-    function processResponse(order) {
+    function processResponse(e, order) {
         const receivedResponse = {
                                 id: newId(),
                                 order: order.text,
@@ -82,6 +77,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
         // Check if question can be found first (because of tutorial q being deleted)
         if (question && question.answer === receivedResponse.answer) {
             playDing()
+            setXpStartLocation({x: e.clientX, y: e.clientY})
             updateLevel(xpGainedPerOrder)
         } else {
             playWrong()
@@ -109,7 +105,7 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerModeOnArr
     // Creates elements of order slips for all the existing orders
     const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
         const currentZ = zIndices[order.id] || 10;
-        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={() => handleOrderClick(order)} staplerModeOn={staplerModeOn}>
+        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={(e) => handleOrderClick(e, order)} staplerModeOn={staplerModeOn}>
             <span className='order-character'>{order.text}</span>
         </Order>
     })

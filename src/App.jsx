@@ -30,6 +30,8 @@ function App() {
 
   const [gameOver, setGameOver] = useState(false)
 
+  const [xpStartLocation, setXpStartLocation] = useState({x: 0, y: 0})
+
   // Preloading work
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,7 +136,7 @@ function App() {
       </AnimatePresence>
 
       {/* Game context and components */}
-      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState]
+      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState], xpStartLocation: [xpStartLocation, setXpStartLocation]
       }}>
         <Popups orderAnswerArr={[orderAnswer, setOrderAnswer]} setGameOver={setGameOver}/>
         <ChineseRoom gameOver={gameOver}/>

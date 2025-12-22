@@ -1,7 +1,7 @@
 import { closestCenter, DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, TouchSensor, DragOverlay } from '@dnd-kit/core'
 import { arrayMove } from '@dnd-kit/sortable'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import React from 'react'
+import React, {useState, useEffect, useRef, useCallback, useContext, useLayoutEffect, createRef} from 'react'
 import { v4 as newId } from 'uuid';
 import { Wheel } from 'react-custom-roulette-r19'
 
@@ -38,32 +38,34 @@ export default function Desk({orderAnswerArr}) {
     const [playHorn] = useSound(hornSound)
     const [playStaplerOpen] = useSound(staplerOpenSound)
     
+    const [tutorialState, setTutorialState] = useContext(LevelContext).tutorialState
+    const [startUpdate, setStartUpdate] = useContext(LevelContext).startUpdate;
+    const [currentlyPlaying, setCurrentlyPlaying] = useContext(LevelContext).currentlyPlaying
+    const [level, setLevel] = useContext(LevelContext).level
 
-    const [ tutorialState, setTutorialState ] = React.useContext(LevelContext).tutorialState
-    const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
-    const [currentlyPlaying, setCurrentlyPlaying] = React.useContext(LevelContext).currentlyPlaying
-    const [level, setLevel] = React.useContext(LevelContext).level
-    const [wheelPresent, setWheelPresent] = React.useState(false)
-    const [wheelData, setWheelData] = React.useState({})
-    const [winningNumber, setWinningNumber] = React.useState()
-    const consideredRule = React.useRef()
-    const [staplerModeOn, setStaplerModeOn] = React.useState(false)
-    const [activeId, setActiveId] = React.useState(null)
-    const [parentDisabled, setParentDisabled] = React.useState(false)
-    const dictionaryUIRef = React.useRef(null)
-    const dictionaryImg = React.useRef(null)
-    const ruleBookUIRef = React.useRef(null)
-    const ruleBookImg = React.useRef(null)
-    const staplerRef = React.useRef(null)
-    const [isDictionaryHovered, setIsDictionaryHovered] = React.useState(false);
-    const [isRuleBookHovered, setIsRuleBookHovered] = React.useState(false);
-    const [isStaplerHovered, setIsStaplerHovered] = React.useState(false);
-    
-    const [mustSpin, setMustSpin] = React.useState(false)
+    const [wheelPresent, setWheelPresent] = useState(false)
+    const [wheelData, setWheelData] = useState({})
+    const [winningNumber, setWinningNumber] = useState()
+    const [staplerModeOn, setStaplerModeOn] = useState(false)
+    const [activeId, setActiveId] = useState(null)
+    const [parentDisabled, setParentDisabled] = useState(false)
+
+    const dictionaryUIRef = useRef(null)
+    const dictionaryImg = useRef(null)
+    const ruleBookUIRef = useRef(null)
+    const ruleBookImg = useRef(null)
+    const staplerRef = useRef(null)
+    const consideredRule = useRef()
+
+    const [isDictionaryHovered, setIsDictionaryHovered] = useState(false);
+    const [isRuleBookHovered, setIsRuleBookHovered] = useState(false);
+    const [isStaplerHovered, setIsStaplerHovered] = useState(false);
+
+    const [mustSpin, setMustSpin] = useState(false)
     const [orderAnswer, setOrderAnswer] = orderAnswerArr
 
     // Dictionary comes preloaded with all potential values
-    const [characters, setCharacters] = React.useState([
+    const [characters, setCharacters] = useState([
     {
         id: "dictionary",
         items: [
@@ -136,7 +138,7 @@ export default function Desk({orderAnswerArr}) {
     ])
 
     // All potential rules for the first few levels are predefined
-    const [rules, setRules] = React.useState({
+    const [rules, setRules] = useState({
         inactive: [
             { id: 1, order: "𓂀𓏐𓈖", answer: "𓆓𓃾𓆣" },
             { id: 2, order: "𓇋𓏏𓋹", answer: "𓆤𓆣𓇯" },
@@ -163,15 +165,15 @@ export default function Desk({orderAnswerArr}) {
             },
         ]
     })
-    const [seenRules, setSeenRules] = React.useState([])
+    const [seenRules, setSeenRules] = useState([])
 
-    const [dictionaryZIndex, setDictionaryZIndex] = React.useState(10);
-    const [rulebookZIndex, setRulebookZIndex] = React.useState(10);
+    const [dictionaryZIndex, setDictionaryZIndex] = useState(10);
+    const [rulebookZIndex, setRulebookZIndex] = useState(10);
 
     // ORDER FUNCTIONS -----------------------------------------------------
 
     // Fills the rulebook with new rules once the tutorial ends
-    React.useEffect(() => {
+    useEffect(() => {
         if (!startUpdate) return
         // Removes tutorial example
         setRules(prev => {
@@ -182,7 +184,7 @@ export default function Desk({orderAnswerArr}) {
     }, [startUpdate]);
 
     // Instantly creates an order after a new level starts
-    React.useEffect(() => {
+    useEffect(() => {
         if (currentlyPlaying === true) {
             generateNewOrder()
         }
@@ -190,7 +192,7 @@ export default function Desk({orderAnswerArr}) {
 
     // Creates the order slips the user interacts with, ensures no duplicate orders will be generated
     // until all options are exhausted
-    const generateNewOrder = React.useCallback(() => {
+    const generateNewOrder = useCallback(() => {
         if (!rules.active?.length) return;
 
         const currentOrders = orderAnswer[orderAnswerContainer.ORDER].items;
@@ -261,9 +263,9 @@ export default function Desk({orderAnswerArr}) {
     }, [rules.active, orderAnswer, seenRules]); 
 
     
-    const savedCallback = React.useRef(generateNewOrder);
+    const savedCallback = useRef(generateNewOrder);
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         savedCallback.current = generateNewOrder;
     }, [generateNewOrder]);
 
@@ -273,7 +275,7 @@ export default function Desk({orderAnswerArr}) {
 
     // RULE FUNCTIONS -----------------------------------------------------
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!currentlyPlaying) return;
 
         // This function wrapper calls whatever is currently in the ref
@@ -286,7 +288,7 @@ export default function Desk({orderAnswerArr}) {
         return () => clearInterval(interval);
     }, [currentlyPlaying, orderDelay]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (level.level === 0) return;
         moveInactiveRulesToActive()
         if (level.level === 2) {
@@ -672,7 +674,7 @@ export default function Desk({orderAnswerArr}) {
 
     // Opaque pixel hover detection - Ensures that buttons can only be clicked where the visible 
     // pixels are, rather than the whole box the image takes up
-    React.useEffect(() => {
+    useEffect(() => {
         const setupPixelHover = (imgRef, canvasRef, setHovered) => {
             const image = imgRef.current;
             if (!image) return;
@@ -730,9 +732,9 @@ export default function Desk({orderAnswerArr}) {
             };
         };
 
-        const dictionaryCanvasRef = React.createRef();
-        const ruleBookCanvasRef = React.createRef();
-        const staplerCanvasRef = React.createRef();
+        const dictionaryCanvasRef = createRef();
+        const ruleBookCanvasRef = createRef();
+        const staplerCanvasRef = createRef();
 
         const cleanupDic = setupPixelHover(dictionaryImg, dictionaryCanvasRef, setIsDictionaryHovered);
         const cleanupRule = setupPixelHover(ruleBookImg, ruleBookCanvasRef, setIsRuleBookHovered);

@@ -1,11 +1,11 @@
 import Draggable from './Draggable' 
-import React from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { useDndMonitor } from '@dnd-kit/core';
 
 export default function DraggableAnywhere({ children, ref=null, className, id, startPos, disabled=false, off=false, style={}, doDragAnimation}) {
-    const [pos, setPos] = React.useState({ x: startPos.x, y: startPos.y });
+    const [pos, setPos] = useState({ x: startPos.x, y: startPos.y });
     // Ref to store the previous window dimensions for comparison
-    const prevDimensionsRef = React.useRef({ 
+    const prevDimensionsRef = useRef({ 
         width: window.innerWidth, 
         height: window.innerHeight 
     });
@@ -20,7 +20,7 @@ export default function DraggableAnywhere({ children, ref=null, className, id, s
     });
 
     // This effect handles browser zoom/resize
-    React.useEffect(() => {
+    useEffect(() => {
         const handleResize = () => {
             const currentWidth = window.innerWidth;
             const currentHeight = window.innerHeight;

@@ -3,17 +3,17 @@ import "./Popup.css"
 import { LevelContext, TutorialContext } from "../Context"
 import popupsJSON from "../../assets/popups.json"
 
-import React from 'react'
+import React, {useEffect, useState, useContext, useRef} from 'react'
 
 // Popup interface
 // {id, content, button1, button2}
 
 export default function Popups({orderAnswerArr, setGameOver}) {
-    const [popupIndex, setPopupIndex] = React.useState(0)
-    const [currentlyPlaying, setCurrentlyPlaying] = React.useContext(LevelContext).currentlyPlaying
-    const dialogueClosed = React.useRef(false)
-    const [level, setLevel] = React.useContext(LevelContext).level
-    const [isTutorial, setIsTutorial] = React.useState(false)
+    const [popupIndex, setPopupIndex] = useState(0)
+    const [currentlyPlaying, setCurrentlyPlaying] = useContext(LevelContext).currentlyPlaying
+    const dialogueClosed = useRef(false)
+    const [level, setLevel] = useContext(LevelContext).level
+    const [isTutorial, setIsTutorial] = useState(false)
 
     let currentPopup
     if (dialogueClosed.current) {
@@ -22,6 +22,8 @@ export default function Popups({orderAnswerArr, setGameOver}) {
         currentPopup = popupsJSON[level.level].popups;
     }
 
+    // Updates dialogue upon button click leading to goto update, 
+    // also turns off tutorial upon first null button
     function updateDialogue(goto) {
         if (goto !== null) {
             setPopupIndex(goto)
@@ -32,7 +34,8 @@ export default function Popups({orderAnswerArr, setGameOver}) {
         }
     }
     
-    React.useEffect(() => {
+    // Resets dialogue index to 0 upon level up to start new level
+    useEffect(() => {
         setPopupIndex(0)
         dialogueClosed.current = false;
         setCurrentlyPlaying(false)

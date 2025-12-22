@@ -15,6 +15,7 @@ import xpSound from '../../assets/sounds/xpPoints.wav'
 
 export default function ChineseRoom({gameOver}) {
     const [levelData, setLevel] = useContext(LevelContext).level
+    const [xpStartLocation, setXpStartLocation] = useContext(LevelContext).xpStartLocation
     const [musicMuted, setMusicMuted] = useState(false)
     const [tutorialOpen, setTutorialOpen] = useState(false)
     const { burst, Overlay } = useXpParticles();
@@ -113,7 +114,7 @@ export default function ChineseRoom({gameOver}) {
 
     useEffect(() => {
         if (xp !== 0) {
-            grantXp()
+            grantXp(xpStartLocation)
             playXp()
         }
         if (xp >= xpRequired) {
