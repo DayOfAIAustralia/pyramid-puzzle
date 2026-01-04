@@ -154,11 +154,7 @@ export default function Desk({ordersObj}) {
             { id: 16, order: "𓉻𓅱𓇯", answer: "𓂝𓏐𓆛" }
             ],
         active: [
-            {
-                id: 6,
-                order: "𓊽𓉐𓉐",
-                answer: "𓃾𓆓"
-            },
+            { id: 6, order: "𓊽𓉐𓉐", answer: "𓃾𓆓" },
         ]
     })
     const [seenRules, setSeenRules] = useState([])
@@ -260,6 +256,7 @@ export default function Desk({ordersObj}) {
         savedCallback.current = generateNewOrder;
     }, [generateNewOrder]);
 
+    // ORDER DELAY TIMER
     const orderDelay = 15 * 1000; // 15 seconds
 
     // END ORDER FUNCTIONS -----------------------------------------------------
@@ -444,11 +441,8 @@ export default function Desk({ordersObj}) {
 
     // Non drag method for moving tiles between dictionary and paper
     const handleTileClick = (id = NULL, character, type) => {
-        if (type == 'dictionary') {
-            playTile()
-        } else {
-            playSwoosh()
-        }
+        type === 'dictionary' ? playTile() : playSwoosh();
+        
         setCharacters(prev => {
             return prev.map(c => {
                 if (type === 'dictionary') {
@@ -752,7 +746,7 @@ export default function Desk({ordersObj}) {
 
     return (
         <>
-            {/* Spinwheel for final elvel */}
+            {/* Spinwheel for final level */}
             {wheelPresent && wheelData.length > 0 && 
             <div className="spinner-wheel">
                 <Wheel

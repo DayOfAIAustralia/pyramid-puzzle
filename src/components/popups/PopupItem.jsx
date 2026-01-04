@@ -125,6 +125,11 @@ export default function PopupItem({text, buttons, updateDialogue, actions, order
             setStartUpdate(true)
         } else if (actions === 10) {
             updateCelebration()
+        // Preloading images for dialogue sections
+        } else if (actions === 11) {
+            new Image().src = "/cpuDiagram.png"
+        } else if (actions === 12) {
+            new Image().src = "/neuralNetwork.png"
         }
     }, [actions])
 
