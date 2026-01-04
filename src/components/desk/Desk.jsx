@@ -443,21 +443,36 @@ export default function Desk({ordersObj}) {
     const handleTileClick = (id = NULL, character, type) => {
         type === 'dictionary' ? playTile() : playSwoosh();
         
-        setCharacters(prev => {
-            return prev.map(c => {
-                if (type === 'dictionary') {
-                    if (c.id === 'paper') {
-                        c.items = [...c.items, {id: newId(), character: character}]
-                    }
+        setCharacters(prev => prev.map(c => {
+            // 1. Create a shallow copy of the container to avoid mutation
+            if (type === 'dictionary') {
+                if (c.id === 'paper') {
+                    return {
+                        ...c,
+                        items: [...c.items, { id: id, character: character }]
+                    };
                 } else {
-                    if (c.id === 'paper') {
-                        c.items = c.items.filter(tile => tile.id != id)              
+                    const oldCharIndex = c.items.findIndex(char => char.id === id);
+                    if (oldCharIndex === -1) return c; // Guard clause
+                    const newDic = {...c,
+                        items: [
+                            ...c.items.slice(0, oldCharIndex),
+                            { id: newId(), character: character }, // Use new ID to make a clone
+                            ...c.items.slice(oldCharIndex + 1)
+                        ]
                     }
+                    return normaliseDictionary(newDic)
                 }
-                return c;
-            })
-            
-        })
+            } else {
+                if (c.id === 'paper') {
+                    return {
+                        ...c,
+                        items: c.items.filter(tile => tile.id !== id)
+                    };
+                }
+            }
+            return c;
+        }));
         if (characters[characterContainer.PAPER].items.length == 2) {
             setTutorialState('filled-paper')
         }

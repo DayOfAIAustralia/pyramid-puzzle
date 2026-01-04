@@ -11,6 +11,7 @@ export default function DictionaryUI({ dictionary, ref, disabled, rules, zIndex 
     const characterElements = dictionary.items.map(char => {
         if (!rules.active.find(rule => Array.from(rule.answer).includes(char.character))) return null;
         return <SortableDraggable 
+                    layoutId={`tile-${char.character}-${char.id}`}
                     key={char.id} 
                     id={char.id} 
                     className='character'
