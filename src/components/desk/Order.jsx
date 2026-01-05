@@ -1,44 +1,65 @@
 import DraggableAnywhere from "../base_dnd/DraggableAnywhere"
 import { useEffect, useState, useRef } from 'react'
 import { useWindowHeight } from '@react-hook/window-size'
+import { motion } from 'framer-motion' 
 
-
-export default function Order({ children, id, slide, active, style }) {
+export default function Order({ children, id, slide, active, style, onClick, staplerModeOn }) {
     const [show, setShow] = useState(false)
     const elementRef = useRef(null);
 
+    // Allows orders to be created that do not slide in from the side (although this
+    // feature is no longer used in the game)
     useEffect(() => {
         if (!slide) return;
         const raf = requestAnimationFrame(() => setShow(true));
         return () => cancelAnimationFrame(raf);
     }, [])
 
+    // Sets random spawn location for new orders
     const windowHeight = useWindowHeight();
-
-    // Define desk boundaries
-    const deskTop = windowHeight * 0.5; // Desk starts at 50% from the top
-    const estimatedHeight = 80; // Estimated height of the Order component
+    const deskTop = windowHeight * 0.5; 
+    const estimatedHeight = 80; 
     const spawnableHeight = windowHeight - deskTop - estimatedHeight;
 
     const yStart = Math.random() * spawnableHeight + deskTop - 30;
     const start = slide ? {x: 0, y: yStart} : {x: 0, y: 150};
+
     return (
         <DraggableAnywhere 
             id={id}
             type='order'
             startPos={start}
-            className={`paper-ui ${active ? "active" : ''}`}
+            className={`paper-ui ${active ? "active" : ''}`} 
             style={style}
             ref={elementRef}
         >
-            
-            <article className={`paper order ${slide ? (!show ? "paper-off-screen" : "paper-on-screen") : ""} `}>
+            <motion.article 
+                className={`paper order ${slide ? (!show ? "paper-off-screen" : "paper-on-screen") : ""} `} 
+                onClick={onClick}
+                
+                animate={staplerModeOn ? "glowing" : "static"}
+                variants={{
+                    static: { 
+                        filter: "drop-shadow(0 0 0px red)" // no glow by default
+                    },
+                    glowing: {
+                        filter: [
+                            "drop-shadow(0 0 4px orange)",
+                            "drop-shadow(0 0 8px orange)",
+                            "drop-shadow(0 0 4px orange)"
+                        ],
+                        transition: {
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }
+                    }
+                }}
+            >
                 <span>Please Respond:</span>
                 {children}
-            </article>
-
+            </motion.article>
 
         </DraggableAnywhere>
-        
     )
 }

@@ -1,7 +1,8 @@
 import {CSS} from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
+import { motion } from 'framer-motion';
 
-export default function SortableDraggable({id, disabled=false, children, className}){
+export default function SortableDraggable({id, disabled=false, children, className, onClick, layoutId, ...animations}){
     const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
         id,
         data: {
@@ -15,15 +16,17 @@ export default function SortableDraggable({id, disabled=false, children, classNa
     };
 
     return (
-        <div 
+        <motion.div 
             ref={setNodeRef}
             style={style} 
             {...listeners} 
             {...attributes} 
             className={`${className} ${isDragging ? "dragging draggable" : 'draggable'}`}
-
+            onClick={onClick}
+            layoutId={layoutId}
+            {...animations}
         >
             {children}
-        </div>
+        </motion.div>
     );
 }

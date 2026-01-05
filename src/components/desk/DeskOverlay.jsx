@@ -1,178 +1,109 @@
-import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, DragOverlay, pointerWithin } from '@dnd-kit/core'
+import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, TouchSensor, pointerWithin } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext, useRef, useState } from 'react'
 import { v4 as newId } from 'uuid';
-
-import { useWindowWidth } from '@react-hook/window-size'
 
 import { LevelContext } from '../Context.jsx';
 import Order from './Order.jsx';
-import Answer from './Answer.jsx';
-import Droppable from '../base_dnd/Droppable.jsx';
-import Response from './Response.jsx'
 
 import useSound from 'use-sound';
-import paperPlaceSound from '../../assets/sounds/paperPlace.wav'
-import stapleSound from '../../assets/sounds/stapler.wav'
-import binSound from '../../assets/sounds/trash.wav'
 import dingSound from '../../assets/sounds/ding.wav'
 import wrongSound from '../../assets/sounds/wrong.wav'
 
-export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
-    const [playStaple] = useSound(stapleSound)
-    const [playPaperPlace] = useSound(paperPlaceSound)
-    const [playBin] = useSound(binSound)
+export default function DeskOverlay({ordersObj, rulesList, staplerModeOnArr, resetPaper, paperString}) {
     const [playWrong] = useSound(wrongSound)
     const [playDing] = useSound(dingSound)
+
+    const [ tutorialState, setTutorialState ] = useContext(LevelContext).tutorialState
+    const [xpStartLocation, setXpStartLocation] = useContext(LevelContext).xpStartLocation
     
-    const orderAnswerContainer = {
-    ORDER: 0,
-    ANSWER: 1,
-    STAPLER: 2,
-    RESPONSES: 3,
-    BIN: 4,
-    PAPERCONTAINER: 5
-    }   
-    
-    const windowWidth = useWindowWidth();
-    const [ orderAnswer, setOrderAnswer ] = orderAnswerArr;
+    const [ orders, setOrders ] = ordersObj;
+    const [ staplerModeOn, setStaplerModeOn ] = staplerModeOnArr;
     const [ rules, setRules ] = rulesList
-    const [ level, setLevel ] = React.useContext(LevelContext).level
-    const [ tutorialState, setTutorialState ] = React.useContext(LevelContext).tutorialState
-    
-    const [key, setKey] = React.useState(0);
-    const paperContainerImg = React.useRef(null)
-    const binImg = React.useRef(null)
-    const outputSidebar = React.useRef(null)
-    const staplerUIRef = React.useRef(null)
-    const [holdingOutput, setHoldingOutput] = React.useState(false)
-    const [showOutput, setShowOutput] = React.useState(false)
-    const [hoverDropped, setHoverDropped] = React.useState(false)
-    const [hoverDroppedItem, setHoverDroppedItem] = React.useState(null)
-    const [activeId, setActiveId] = React.useState(null)
-    const [firstOrderPickup, setFirstOrderPickup] = React.useState(false);
-    const [startUpdate, setStartUpdate] = React.useContext(LevelContext).startUpdate;
+    const [ level, setLevel ] = useContext(LevelContext).level
 
-    const [zIndices, setZIndices] = React.useState({});
-    const globalZCounter = React.useRef(10);
+    const [activeId, setActiveId] = useState(null)
+    const [firstOrderPickup, setFirstOrderPickup] = useState(false);
 
-    React.useEffect(() => {
-        if (!startUpdate && tutorialState != "stapled-response") return;
+    const [zIndices, setZIndices] = useState({});
+    const globalZCounter = useRef(10);
 
-        const checkPosition = (e) => {
-            const clientX = e.clientX ?? e.touches?.[0]?.clientX;
 
-            if (clientX === undefined) {
-                return;
-            }
-            if (holdingOutput) {
-                if (clientX > (windowWidth * 0.6)) {
-                    setShowOutput(true)
-                } else {
-                    setShowOutput(false)
-                }
-            }
+    // STAPLER FUNCTIONS ----------------------------------------------------
+    // Cursor update for activating stapler mode
+    useEffect(() => {
+        if (staplerModeOn) {
+            console.log("stapler mode on")
+            document.body.classList.add('stapler-cursor');
+
+        } else {
+            document.body.classList.remove('stapler-cursor');        
         }
-        window.addEventListener('mousemove', checkPosition)
-        window.addEventListener('touchmove', checkPosition);
 
         return () => {
-            window.removeEventListener('mousemove', checkPosition)
-            window.removeEventListener('touchmove', checkPosition);
-            setShowOutput(false)
+            document.body.classList.remove('stapler-cursor');
         }
-    }, [holdingOutput])
+    }, [staplerModeOn])
 
-    const orderList = orderAnswer.find(container => container.id === 'orders').items.map(order => {
+    const handleOrderClick = (e, item) => {
+        // 1. Check if Stapler Mode is active
+        if (staplerModeOn) {
+            if (!paperString) return;
+            // 2. Check if the item is the "correct type" (e.g., paper)
+            if (item.type === 'orders') {
+                // Perform the stapling action
+                console.log("Stapled the item!");
+                setStaplerModeOn(false)
+                processResponse(e, item)
+            } else {
+                console.log("You can't staple this! its a " + item.type);
+            }
+            setTutorialState('stapled-response')
+            return; // Stop here so we don't trigger the normal click behavior
+        }
+    }
+
+
+    function processResponse(e, order) {
+        const receivedResponse = {
+                                id: newId(),
+                                order: order.text,
+                                answer: paperString,
+                                type: 'responses' 
+                            }
+        const question = rules.active.find((rule) => rule.order === receivedResponse.order)
+        const xpGainedPerOrder = 30;
+        
+        // Check if question can be found first (because of tutorial q being deleted)
+        if (question && question.answer === receivedResponse.answer) {
+            playDing()
+            setXpStartLocation({x: e.clientX, y: e.clientY})
+            updateLevel(xpGainedPerOrder)
+        } else {
+            playWrong()
+        }
+
+        // Removes selected order from orders items array
+        setOrders(prev => {
+            return prev.filter(item => item.text != order.text)
+        })
+
+        // Removes tiles from paper
+        resetPaper()
+
+    }
+    // END STAPLER FUNCTIONS ----------------------------------------------------
+
+    // Creates elements of order slips for all the existing orders
+    const orderList = orders.map(order => {
         const currentZ = zIndices[order.id] || 10;
-        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}}>
-            <span className='character'>{order.text}</span>
+        return <Order id={order.id} key={order.id} slide={order.initial} active={order.id === activeId} style={{zIndex: currentZ}} onClick={(e) => handleOrderClick(e, order)} staplerModeOn={staplerModeOn}>
+            <span className='order-character'>{order.text}</span>
         </Order>
     })
 
-    const answerList = orderAnswer.find(container => container.id === 'answers').items.map(answer => {
-        const currentZ = zIndices[answer.id] || 10;
-        return <Answer id={answer.id} key={answer.id} active={answer.id === activeId} style={{zIndex: currentZ}}>
-            <span className='character'>{answer.text}</span>
-        </Answer>
-    })
-
-    const responsesList = orderAnswer.find(container => container.id === 'responses').items.map(response => {
-        const currentZ = zIndices[response.id] || 10;
-
-        return <Response id={response.id} key={response.id} active={response.id === activeId} style={{zIndex: currentZ}}/>
-
-    })
-
-    const orderItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'orders')
-    const answerItem = orderAnswer[orderAnswerContainer.STAPLER].items.find(item => item.type === 'answers')
-    const staplerItemsElements = (
-        <>
-            <div className='stapler-drop'>
-                {orderItem ? 
-                <div style={{fontSize: 24}}>{orderItem.text}</div>
-                : <span>Order's go here!</span>}
-            </div>
-            <div className='stapler-drop'>
-                {answerItem ? 
-                <div style={{fontSize: 24}}>{answerItem.text}</div>
-                : <span>Answer's go here!</span>}
-            </div>
-            {orderItem && answerItem ? 
-            <button className='stapler-btn' onClick={createResponse}>Staple</button>
-            : null}
-        </>
-    )
-
-    const sensors = useSensors(
-        useSensor(PointerSensor, {
-            activationConstraint: {
-                distance: 8
-            }
-        }),
-        useSensor(KeyboardSensor)
-    )
-
-    function findPaperContainerId(itemId) {
-        if (orderAnswer.some(container => container.id === itemId)) {
-            return itemId
-        }
-        return orderAnswer.find(container => 
-            container.items.some((item) => item.id === itemId)
-        )?.id;
-    }
-
-
-    function createResponse() {
-        playStaple()
-        setTutorialState('stapled-response')
-        setOrderAnswer(prev => {
-            return prev.map(c => {
-                if (c.id === 'stapler') {
-                    return {
-                        ...c,
-                        items: []
-                    }
-                }
-                if (c.id === 'responses') {
-                    return {
-                        ...c,
-                        items: [
-                            ...c.items,
-                            {
-                                id: newId(),
-                                order: orderItem.text,
-                                answer: answerItem.text,
-                                type: 'responses' 
-                            }
-                        ]
-                    }
-                }
-                return c
-            })
-        })
-    }
-
+    
+    // Ensures whichever note has been last clicked it top of the stack
     const bringNoteToFront = (id) => {
         // Increment the global counter
         globalZCounter.current += 1;
@@ -184,9 +115,8 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         }));
     };
 
-    function handleNotesDragStart({ active, over }) {
-        setHoldingOutput(true)
-
+    // DnD KIT NOTE DRAG FUNCTIONS ----------------------------------
+    function handleNotesDragStart({ active }) {
         const activeId = active.id;
         setActiveId(activeId)
         bringNoteToFront(activeId)
@@ -201,217 +131,15 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
 
     }
 
-    function handleNotesDragOver(event) {
-        const { active, over } = event;
-
-        const activeId = active.id;
-        const activeContainerId = findPaperContainerId(activeId)
-        const activeContainerIndex = orderAnswer.findIndex(c => c.id === activeContainerId)
-        const activeObj = orderAnswer[activeContainerIndex].items.find(item => item.id === activeId)
-        
-        // Paper container is only interactable with a responses object, not an order or answer slip
-        if (over?.id === 'paper-container' && activeObj.type !== 'responses') return;
-        if (over?.id === 'stapler' && activeObj.type === 'responses') return;
-
-        // remove animation from when it first appeared
-        if (activeObj.type === 'orders') activeObj.initial = false;
-
-        if (!over) {
-            if (hoverDropped) {
-                setOrderAnswer(prev => {
-                    return prev.map(container => {
-                        if (activeContainerId === 'stapler' && container.id === 'stapler') {
-                            const addedItem = container.items.find(item => item.id === activeId)
-                            let itemList;
-                            if (hoverDroppedItem) {
-                                itemList = 
-                                [...container.items.filter(item => item.id !== addedItem.id),
-                                hoverDroppedItem
-                                ]
-                            } else {
-                                itemList = [...container.items.filter(item => item.id !== addedItem.id)]
-                            }
-                            
-                            return  {
-                                ...container,
-                                items: itemList
-                            }
-                        } 
-
-                        if (activeContainerId === 'bin' && container.id === 'bin') {
-                            binImg.current.style.backgroundImage = 'url(binEmpty.png)'
-                            return {
-                                ...container,
-                                items: [
-                                ]
-                            }
-                        }
-
-
-                        if (activeContainerId === 'paper-container' && container.id === 'paper-container') {
-                            paperContainerImg.current.style.backgroundImage = 'url(paperContainerEmpty.png)'
-                            return {
-                                ...container,
-                                items: [
-                                ]
-                            }
-                        }
-
-                        if (container.id === activeObj.type) {
-                            let itemList;
-                            
-                            if (hoverDroppedItem) {
-                                itemList = [...container.items.filter(item => item.id !== hoverDroppedItem.id), activeObj]
-                            } else {
-                                itemList = [...container.items, activeObj]
-                            }
-                            return {
-                                ...container,
-                                items: itemList
-                            }
-                            
-                        }
-                        return container;
-                    })
-
-                })
-                setHoverDropped(false)
-                setHoverDroppedItem(null)
-
-            }
-            return;
-
-        } 
-
-        const overId = over.id;
-
-        const overContainerId = findPaperContainerId(overId)
-
-        if (!activeContainerId || !overContainerId) return;
-
-        if (activeContainerId === overContainerId) return;
-
-        let tempHoverDropped = false;
-        let tempHoverDroppedItem = null;
-
-
-        setOrderAnswer(prev => {
-            return prev.map(container => {
-                if (overContainerId === 'stapler' && container.id === 'stapler') {
-                    const existingItem = container.items.find(item => item.type === activeContainerId)
-                    const itemList = existingItem ? 
-                        [...container.items.filter(item => item.id !== existingItem.id),
-                            {...activeObj, type: activeContainerId}
-                        ]
-                        : [...container.items, {...activeObj, type: activeContainerId}]
-                    tempHoverDropped=true
-                    tempHoverDroppedItem = existingItem
-                    
-                    return  {
-                        ...container,
-                        items: itemList
-                    }
-                } 
-
-                if (overContainerId === 'bin' && container.id === 'bin') {
-                    binImg.current.style.backgroundImage = 'url(bin.png)'
-                    tempHoverDropped= true
-                    tempHoverDroppedItem = null
-                    return {
-                        ...container,
-                        items: [
-                            activeObj
-                        ]
-                    }
-                }
-                if (overContainerId === 'paper-container' && container.id === 'paper-container') {
-                    paperContainerImg.current.style.backgroundImage = 'url(paperContainer.png)'
-                    tempHoverDropped=true
-                    tempHoverDroppedItem = null
-                    return {
-                        ...container,
-                        items: [
-                            activeObj
-                        ]
-                    }
-                }
-
-                if (container.id === activeContainerId) {
-                    let existingItem
-                    if (overContainerId === 'stapler') {
-                        existingItem = prev[orderAnswerContainer.STAPLER].items.find(item => item.type === activeContainerId)
-                    } else {
-                        existingItem = null
-                    }
-                    
-                    const itemList = existingItem ? 
-                        [...container.items.filter(item => item.id !== activeId),
-                        existingItem
-                        ]
-                        : [...container.items.filter(item => item.id !== activeId)]
-                    return {
-                        ...container,
-                        items: itemList
-                    }
-                    
-                }
-                return container;
-            })
-        })
-        setHoverDropped(tempHoverDropped)
-        setHoverDroppedItem(tempHoverDroppedItem)
-
-    }
-
-    function handleNotesDragEnd({ active, over }) {
-        setHoldingOutput(false)
+    function handleNotesDragEnd() {
         setActiveId(null)
-        setHoverDropped(false)
-        setHoverDroppedItem(null)
         document.body.classList.remove('dragging-cursor');
 
-        if (orderAnswer[orderAnswerContainer.BIN].items.length > 0) {
-            setTutorialState('finished-response')
-
-            binImg.current.style.backgroundImage = 'url(binEmpty.png)'
-            playBin()
-            setOrderAnswer(prev => {
-                return prev.map((c) => {
-                    if (c.id === 'bin') {
-                        return {id: 'bin', items: []}
-                    } else {
-                        return c
-                    }
-                })
-            })
-        }
-
-        if (orderAnswer[orderAnswerContainer.PAPERCONTAINER].items.length > 0) {
-            setTutorialState('finished-response')
-
-            playPaperPlace()
-            processResponse()
-            paperContainerImg.current.style.backgroundImage = 'url(paperContainerEmpty.png)'
-
-        }
-
     }
 
-    function processResponse() {
-        const receivedResponse = orderAnswer[orderAnswerContainer.PAPERCONTAINER].items[0];
-        const question = rules.active.find((rule) => rule.order === receivedResponse.order)
-        const xpGainedPerOrder = 30;
+    // END DnD KIT NOTE DRAG FUNCTIONS ----------------------------------
 
-        // Check if question can be found first (because of tutorial q being deleted)
-        if (question && question.answer === receivedResponse.answer) {
-            playDing()
-            updateLevel(xpGainedPerOrder)
-        } else {
-            playWrong()
-        }
-        orderAnswer[orderAnswerContainer.PAPERCONTAINER].items = []
-    }
-
+    // Adds xp to level
     function updateLevel(added_xp) {
         setLevel(prev => {
             return {
@@ -421,6 +149,21 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
         })
     }
 
+    // DnD Kit sensors for handling slip movement
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8
+            }
+        }),
+        useSensor(KeyboardSensor),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250, // Time in ms
+                tolerance: 5, // Allow slight wobble while pressing
+            }
+        })
+    )
 
     return (
         <DndContext
@@ -429,44 +172,10 @@ export default function DeskOverlay({orderAnswerArr, rulesList, staplerOpen}) {
             modifiers={[restrictToWindowEdges]}  
             autoScroll={false}
             onDragStart={handleNotesDragStart}
-            onDragMove={handleNotesDragOver}
             onDragEnd={handleNotesDragEnd}
         >
             <div>
                 {orderList}
-
-                {answerList}
-
-                {responsesList}
-            </div>
-            <div 
-                className={`output ${showOutput ? 'output-display' : ''}`} 
-                ref={outputSidebar}
-                onTransitionEnd={() => setKey(k => k + 1)}
-            >
-                <div className='bin' ref={binImg}>
-                    <Droppable key={`bin-${key}`} id='bin' className='sidebar-container' >
-
-                    </Droppable>
-                    
-                </div>
-                <div className='paper-container' ref={paperContainerImg}>
-                    <Droppable key={`paper-${key}`} id='paper-container' className='sidebar-container'>
-                        
-                    </Droppable>
-                    
-                </div>
-                
-            </div>
-            <div className='stapler'>
-                <Droppable 
-                    id='stapler' 
-                    className='stapler-ui' 
-                    ref={staplerUIRef}
-                    style={staplerOpen ? {} : {display: 'none'}}
-                    >
-                    {staplerItemsElements}
-                </Droppable>
             </div>
         
         </DndContext>

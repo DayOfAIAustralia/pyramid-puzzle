@@ -16,43 +16,25 @@
   position: relative;
 }
 
+.touchable {
+    touch-action: none; /* Prevents the browser from scrolling when you touch the order */
+    user-select: none;  /* Prevents text selection highlighting on long-press */
+}
+
 .stapler {
-  position: absolute;
-  height: 40vh;
-  width: 40vh;
-  margin: 0;
-  top: 50%;
-  left: 20%;
-  cursor: pointer;
-}
-
-.stapler > button {
-  all: unset;
-  height: 40vh;
-  width: 40vh;
-  margin: 0;
-  top: 50%;
-  left: 20%;
-  cursor: pointer;
-}
-
-.stapler-2 {
   all: unset;
   grid-area: stapler;
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none;
 }
 
-.stapler-2 > img {
+.stapler > img {
   max-height: 40vh;
   width: 100%;
   transition: transform 0.2s ease-in-out;
   cursor: pointer;
   margin: 0;
-  pointer-events: auto;
-
 }
 
 .stapler-ui {
@@ -228,7 +210,7 @@
   all: unset;
   position: absolute;
   width: 50px;
-  height: 50px;
+  height: 100%;
   top: 0;
   right: 0;
   z-index: 10;
@@ -246,7 +228,7 @@
   position: fixed;
   z-index: 10;
 
-  width: 42vh;
+  min-width: 42vh;
   min-height: 345px;
   cursor: grab;
 
@@ -385,24 +367,20 @@
   padding: 6px;
 }
 
+
 .character {
-  font-size: 2em;
+  font-family: 'Noto Sans Egyptian Hieroglyphs', sans-serif;
+  font-size: 1.5rem;
 }
 
-.dragged-draggable {
-  padding: 4px;
-  width: 2em;
-  text-align: center;
-  height: auto;
-  background-color: rgb(245, 245, 220);
-  border: 1px solid black;
-  cursor: grab;
-  z-index: 5;
+.order-character {
+  font-family: 'Noto Sans Egyptian Hieroglyphs', sans-serif;
+  font-size: 2rem;
 }
 
 .draggable {
   padding: 4px;
-  width: 1em;
+  width: 2.5rem;
   text-align: center;
   height: auto;
   background-color: rgb(245, 245, 220);
@@ -423,6 +401,9 @@ body.dragging-cursor * {
   cursor: grabbing !important;
 }
 
+body.stapler-cursor * {
+  cursor: url("/staplerCursor.png"), auto !important;
+}
 
 .rules {
   all: unset;
@@ -442,7 +423,7 @@ body.dragging-cursor * {
 
 .dictionary > img.hovered,
 .rules > img.hovered,
-.stapler-2 > img.hovered {
+.stapler > img.hovered {
   transform: scale(1.1);
 }
 

@@ -10,6 +10,8 @@ import ruleMoveSound from '../../assets/sounds/ruleMove.wav'
 export default function RuleBook({ref, rules, updateRule=null, zIndex}) {
     const [playRuleMove] = useSound(ruleMoveSound)
     const [level, setLevel] = useContext(LevelContext).level
+    const [currentlyPlaying, setCurrentlyPlaying] = useContext(LevelContext).currentlyPlaying
+    
     const [disabled, setDisabled] = useState(false)
 
     const [currPage, setCurrPage] = useState(1);
@@ -20,17 +22,24 @@ export default function RuleBook({ref, rules, updateRule=null, zIndex}) {
 
     const currRules = rules.active.slice(firstIndex, lastIndex)
 
+    // Sets page to 1 whenever rules are updated
     useEffect(() => {
+        // Prevents reseting page after spinwheel
+        if (currentlyPlaying) return
+
         setCurrPage(1)
         setDisabled(false)
     }, [rules])
 
+    // Updates rules for when spinwheel is in play and new rules need to be generated
     function handleButtonClick(rule) {
         updateRule(rule.order)
         setDisabled(true);
     }
 
+    // Creates rules and answers for before and after spinwheel
     const rulesElements = currRules.map(rule => {
+        // No spinwheel
         if (level.level < 2) {
             return (
             <div className='rule' key={rule.id}>
@@ -48,6 +57,7 @@ export default function RuleBook({ref, rules, updateRule=null, zIndex}) {
             )
         }
         
+        // Spinwheel in play
         return (
             <div className='rule' key={rule.id}>
                 <div className="rule-data">
@@ -65,6 +75,7 @@ export default function RuleBook({ref, rules, updateRule=null, zIndex}) {
         )
     })
 
+    // Calculates the amount of pages needed and creates buttons
     const pageCount = Math.ceil(rules.active.length / rulesPerPage);
     let pageButtons = [];
     for (let i = 1; i < pageCount + 1; i++)  {

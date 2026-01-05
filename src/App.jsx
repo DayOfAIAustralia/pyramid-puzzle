@@ -4,12 +4,12 @@ import {  AnimatePresence, motion } from 'framer-motion'
 
 import ChineseRoom from './components/room/ChineseRoom'
 import Desk from './components/desk/Desk'
-import Popups from './components/Popups'
+import Popups from './components/popups/Popups'
 
 import './components/room/ChineseRoom.css'
 import './components/desk/Desk.css'
 
-import "./components/Popup.css"
+import "./components/popups/Popup.css"
 
 function App() {
 
@@ -19,70 +19,49 @@ function App() {
     xpRequired: 90
   })
 
+  // Global context values needed across components
   const [tutorialState, setTutorialState] = useState(null)
 
   const [currentlyPlaying, setCurrentlyPlaying] = useState(false)
 
   const [startUpdate, setStartUpdate] = useState(false)
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
 
   const [gameOver, setGameOver] = useState(false)
 
+  const [xpStartLocation, setXpStartLocation] = useState({x: 0, y: 0})
+
+  // Preloading work
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500); // 1.5 second loading screen
+    }, 1500); // 1.5 second loading screen to ensure assets are downloaded
 
     return () => clearTimeout(timer);
   }, []);
 
+  // Preloads images to prevent game stuttering
   useEffect(() => {
     const imagesToPreload = [
-      '/bin.png',
-      '/paperContainer.png',
       '/arrow.png',
       '/question.png',
       '/dictionaryOpen.png',
       '/rulesOpen.png',
-      '/paperFurl.png',
-      '/response.png',
+      '/staplerCursor.png',
       '/slip.png',
     ];
 
     imagesToPreload.forEach((image) => new Image().src = image);
   }, []);
 
-  const [orderAnswer, setOrderAnswer] = useState([
-    {
-    id: "orders",
-    items: []
-    },
-    {
-    id: "answers",
-    items: []
-    },
-    {
-    id: "stapler",
-    items: []
-    },
-    {
-    id: "responses",
-    items: []
-    },
-    {
-    id: "bin",
-    items: []
-    },
-    {
-    id: "paper-container",
-    items: []
-    }
-  ])
+  // Contains the orders that are added throughout the game
+  const [orders, setOrders] = useState([])
 
 
   return (
     <>
+      {/* Warning to use landscape mode */}
       <div className="popups rotate-device-overlay" style={{backgroundImage: 'url("/desk.jpg")', zIndex: 9999}}>
           <div className="popup">
           <section className="popup-data" style={{fontSize: "30px"}}>
@@ -98,6 +77,8 @@ function App() {
           
         </div>
       </div>
+
+      {/* Loading screen */}
       <AnimatePresence>
         {isLoading && (
           <motion.div
@@ -146,11 +127,12 @@ function App() {
         )}
       </AnimatePresence>
 
-      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState]
+      {/* Game context and components */}
+      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState], xpStartLocation: [xpStartLocation, setXpStartLocation]
       }}>
-        <Popups orderAnswerArr={[orderAnswer, setOrderAnswer]} setGameOver={setGameOver}/>
+        <Popups orders={[orders, setOrders]} setGameOver={setGameOver}/>
         <ChineseRoom gameOver={gameOver}/>
-        <Desk orderAnswerArr={[orderAnswer, setOrderAnswer]}/>
+        <Desk ordersObj={[orders, setOrders]}/>
       </LevelContext>
 
     </>
