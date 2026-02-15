@@ -199,7 +199,7 @@
 }
 
 .rules-content {
-  padding: 4px;
+  padding: 6px;
   padding-top: 0px;
   flex-grow: 1;
 }
@@ -223,7 +223,7 @@
   border: 1px solid #8b4513;
   border-radius: 4px;
   padding: 3px 7px;
-  font-family: "Jersey 10", sans-serif;
+  font-family: "Karla", sans-serif;
   font-size: clamp(13px, 2vh, 16px);
   color: #5d4037;
   cursor: pointer;
@@ -284,7 +284,7 @@
 
 .dictionary > img {
   margin: 0;
-  width: 400px;
+  width: 420px;
 }
 
 .default-off {
@@ -369,7 +369,7 @@ body.stapler-cursor * {
 
 .rules > img {
   margin: 0;
-  width: 400px;
+  width: 450px;
 }
 
 .spinner-wheel {
@@ -380,7 +380,7 @@ body.stapler-cursor * {
 .book-tab {
   text-align: center;
   font-family: "Jersey 10", sans-serif;
-  font-size: 1em;
+  font-size: 16px;
   letter-spacing: 1px;
   border-radius: 4px;
   padding: 6px;
@@ -419,7 +419,8 @@ body.stapler-cursor * {
 
 .zone-label {
   font-family: "Jersey 10", sans-serif;
-  font-size: clamp(11px, 1.8vh, 14px);
+  font-size: 16px;
+  font-weight: bold;
   color: #5d4037;
   margin-bottom: 4px;
   letter-spacing: 0.5px;
