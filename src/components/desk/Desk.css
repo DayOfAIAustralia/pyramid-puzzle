@@ -653,3 +653,25 @@ body.stapler-cursor * {
   z-index: 10;
   pointer-events: none;
 }
+
+@media (min-width: 1600px) {
+  .dictionary > img {
+    margin: 0;
+    width: 500px;
+  }
+
+  .dictionary-ui {
+    width: 350px;
+    height: 250px;
+  }
+
+  .rules > img {
+    margin: 0;
+    width: 550px;
+  }
+
+  .rulebook-ui {
+    width: 400px;
+    height: 300px;
+  }
+}
