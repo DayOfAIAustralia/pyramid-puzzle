@@ -190,8 +190,8 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: 400px;
-  min-height: 345px;
+  width: 300px;
+  min-height: 250px;
 
   display: flex;
   flex-direction: column;
@@ -199,7 +199,7 @@
 }
 
 .rules-content {
-  padding: 6px;
+  padding: 4px;
   padding-top: 0px;
   flex-grow: 1;
 }
@@ -207,14 +207,14 @@
 .rule {
   display: flex;
   border-bottom: 1px solid black;
-  padding-block: 6px;
+  padding-block: 3px;
   justify-content: space-between;
 }
 
 .rule-data {
   display: flex;
   flex-direction: column;
-  padding-inline: 8px;
+  padding-inline: 4px;
   align-items: center;
 }
 
@@ -284,7 +284,7 @@
 
 .dictionary > img {
   margin: 0;
-  width: 550px;
+  width: 400px;
 }
 
 .default-off {
@@ -298,8 +298,8 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: 375px;
-  min-height: 275px;
+  width: 300px;
+  min-height: 200px;
   cursor: grab;
 }
 
@@ -309,21 +309,21 @@
 
 .dictionary-items {
   display: flex;
-  gap: 18px;
-  padding: 8px;
+  gap: 10px;
+  padding: 6px;
 }
 
 .dictionary-column {
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 6px;
+  gap: 2px;
   flex: 1;
   align-content: start;
 }
 
 .character {
   font-family: "Noto Sans Egyptian Hieroglyphs", sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .order-character {
@@ -332,8 +332,8 @@
 }
 
 .draggable {
-  padding: 4px;
-  width: 2.5rem;
+  padding: 2px;
+  width: 2rem;
   text-align: center;
   height: auto;
   background-color: rgb(245, 245, 220);
@@ -369,7 +369,7 @@ body.stapler-cursor * {
 
 .rules > img {
   margin: 0;
-  width: 550px;
+  width: 400px;
 }
 
 .spinner-wheel {
