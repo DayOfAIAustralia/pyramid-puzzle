@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 export default function SortableDraggable({id, disabled=false, children, className, onClick, layoutId, ...animations}){
     const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
         id,
+        disabled,
         data: {
             type: "character"
         }
@@ -16,13 +17,13 @@ export default function SortableDraggable({id, disabled=false, children, classNa
     };
 
     return (
-        <motion.div 
+        <motion.div
             ref={setNodeRef}
-            style={style} 
-            {...listeners} 
-            {...attributes} 
+            style={style}
+            {...(disabled ? {} : listeners)}
+            {...attributes}
             className={`${className} ${isDragging ? "dragging draggable" : 'draggable'}`}
-            onClick={onClick}
+            onClick={disabled ? undefined : onClick}
             layoutId={layoutId}
             {...animations}
         >

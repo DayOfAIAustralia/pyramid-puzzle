@@ -26,6 +26,7 @@ export default function PopupItem({
   const [useButton, setUseButton] = useState(true);
   const [tutorialState, setTutorialState] =
     useContext(LevelContext).tutorialState;
+  const [, setDictionaryUnlocked] = useContext(LevelContext).dictionaryUnlocked;
   const [arrowRotation, setArrowRotation] = useState(0);
   const [arrowMoveDirection, setArrowMoveDirection] = useState("vertical");
   const [key, setKey] = useState(1);
@@ -48,6 +49,7 @@ export default function PopupItem({
   useEffect(() => {
     if (actions === 0) {
       setIsTutorial(true);
+      setDictionaryUnlocked(false);
       setUseButton(true);
 
       setShowTutorialArrow(true);
@@ -90,6 +92,7 @@ export default function PopupItem({
       setArrowMoveDirection("horizontal");
       setPosition({ top: "25%", left: "auto", right: "10%", bottom: "auto" });
     } else if (actions === 3) {
+      setDictionaryUnlocked(true);
       setShowTutorialArrow(false);
       setUseButton(false);
       setPosition({ top: "35%", left: "auto", right: "10%", bottom: "auto" });

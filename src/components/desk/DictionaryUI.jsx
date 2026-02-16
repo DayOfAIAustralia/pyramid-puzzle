@@ -10,6 +10,7 @@ export default function DictionaryUI({
   rules,
   zIndex,
   handleTileClick,
+  disabled,
 }) {
   // Creates all the tiles for use in the dictionary, ensures they are all unique and
   // only includes tiles that are being used in currently valid rules
@@ -28,7 +29,8 @@ export default function DictionaryUI({
           id={char.id}
           className="character"
           type="character"
-          onClick={() => handleTileClick(char.id, char.character, "dictionary")}
+          disabled={disabled}
+          onClick={disabled ? undefined : () => handleTileClick(char.id, char.character, "dictionary")}
         >
           {char.character}
         </SortableDraggable>

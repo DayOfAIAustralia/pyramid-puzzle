@@ -39,6 +39,8 @@ function App() {
 
   const [totalPoints, setTotalPoints] = useState(0)
 
+  const [dictionaryUnlocked, setDictionaryUnlocked] = useState(true)
+
   // Preloading work
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -134,7 +136,7 @@ function App() {
       </AnimatePresence>
 
       {/* Game context and components */}
-      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState], xpStartLocation: [xpStartLocation, setXpStartLocation], isTutorial: [isTutorial, setIsTutorial], totalPoints: [totalPoints, setTotalPoints]
+      <LevelContext value={{level: [level, setLevel], currentlyPlaying: [currentlyPlaying, setCurrentlyPlaying], startUpdate: [startUpdate, setStartUpdate], tutorialState: [tutorialState, setTutorialState], xpStartLocation: [xpStartLocation, setXpStartLocation], isTutorial: [isTutorial, setIsTutorial], totalPoints: [totalPoints, setTotalPoints], dictionaryUnlocked: [dictionaryUnlocked, setDictionaryUnlocked]
       }}>
         <Popups orders={[orders, setOrders]} setGameOver={setGameOver}/>
         <ChineseRoom gameOver={gameOver}/>
