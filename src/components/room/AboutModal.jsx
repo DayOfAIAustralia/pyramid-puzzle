@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { IoInformationCircleSharp, IoClose } from "react-icons/io5";
 import "./AboutModal.css";
 
-export default function AboutModal() {
+export default function AboutModal({ onOpenChange }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
 
   const modal = (
     <div className="popups" onClick={() => setIsOpen(false)}>

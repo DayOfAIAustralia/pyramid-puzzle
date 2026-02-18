@@ -48,6 +48,7 @@ export default function Desk() {
   const [isTutorial] = useContext(LevelContext).isTutorial;
   const [, setTotalPoints] = useContext(LevelContext).totalPoints;
   const [dictionaryUnlocked] = useContext(LevelContext).dictionaryUnlocked;
+  const [modalOpen] = useContext(LevelContext).modalOpen;
 
   // New state for split paper order system
   const [activeOrder, setActiveOrder] = useState(null);
@@ -143,8 +144,8 @@ export default function Desk() {
   });
 
   useEffect(() => {
-    setTimerPaused(spinWheel.wheelPresent);
-  }, [spinWheel.wheelPresent]);
+    setTimerPaused(spinWheel.wheelPresent || modalOpen);
+  }, [spinWheel.wheelPresent, modalOpen]);
 
   useEffect(() => {
     setTotalPoints(scoring.totalPoints);
