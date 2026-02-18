@@ -47,6 +47,7 @@ export default function Desk() {
     useContext(LevelContext).xpStartLocation;
   const [isTutorial] = useContext(LevelContext).isTutorial;
   const [, setTotalPoints] = useContext(LevelContext).totalPoints;
+  const [dictionaryUnlocked] = useContext(LevelContext).dictionaryUnlocked;
 
   // New state for split paper order system
   const [activeOrder, setActiveOrder] = useState(null);
@@ -484,6 +485,7 @@ export default function Desk() {
               rules={rules}
               zIndex={dictionaryZIndex}
               handleTileClick={dragDrop.handleTileClick}
+              disabled={!dictionaryUnlocked}
             />
           </div>
 
