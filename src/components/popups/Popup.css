@@ -98,6 +98,25 @@
   color: white;
 }
 
+.popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease-in-out;
+}
+
+.popup-close-btn:hover {
+  color: #54beefff;
+}
+
 .tutorial-arrow {
   pointer-events: none;
   position: absolute;

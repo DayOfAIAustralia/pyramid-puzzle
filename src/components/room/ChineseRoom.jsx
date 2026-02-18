@@ -3,7 +3,7 @@ import { LevelContext } from "../Context";
 
 import { MdMusicNote } from "react-icons/md";
 import { MdMusicOff } from "react-icons/md";
-import { IoHelpCircleSharp } from "react-icons/io5";
+import { IoHelpCircleSharp, IoClose } from "react-icons/io5";
 import AboutModal from "./AboutModal";
 
 import useSound from "use-sound";
@@ -24,9 +24,15 @@ export default function ChineseRoom({ gameOver }) {
     return saved === "true";
   });
   const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [, setModalOpen] = useContext(LevelContext).modalOpen;
   const { burst, Overlay } = useXpParticles();
   const xpIconRef = useRef(null);
   const [isLoadingTutorial, setIsLoadingTutorial] = useState(true);
+
+  useEffect(() => {
+    setModalOpen(tutorialOpen || aboutOpen);
+  }, [tutorialOpen, aboutOpen, setModalOpen]);
 
   const [playXp] = useSound(xpSound);
   const [playCelebration] = useSound(celebrationMusic);
@@ -106,9 +112,15 @@ export default function ChineseRoom({ gameOver }) {
   );
 
   const tutorialInfo = (
-    <div className="popups">
+    <div className="popups" onClick={() => setTutorialOpen(false)}>
       <div className="popup">
-        <div className="popup-data">
+        <div className="popup-data" onClick={(e) => e.stopPropagation()}>
+          <button
+            className="popup-close-btn"
+            onClick={() => setTutorialOpen(false)}
+          >
+            <IoClose size="1.5em" />
+          </button>
           <div
             className="popup-text"
             style={{ fontSize: 24, fontWeight: "bold" }}
@@ -206,7 +218,7 @@ export default function ChineseRoom({ gameOver }) {
         <div className="overlay-btn-container">
           {tutorialButton}
           {musicButton}
-          <AboutModal />
+          <AboutModal onOpenChange={setAboutOpen} />
         </div>
 
         <Overlay />
