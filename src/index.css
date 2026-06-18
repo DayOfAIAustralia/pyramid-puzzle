@@ -67,9 +67,7 @@ html, body {
   display: none; 
 }
 
-@media (orientation: portrait) 
-   and (pointer: coarse) 
-   and (min-width: 700px) {
+@media (orientation: portrait) {
 
   /* Show the overlay */
   .rotate-device-overlay {
