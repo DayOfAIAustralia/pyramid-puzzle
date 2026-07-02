@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { isMobileOnly } from 'react-device-detect'
+import { isMobileOnly, isDesktop } from 'react-device-detect'
 import { LevelContext } from './components/Context'
 import {  AnimatePresence, motion } from 'framer-motion'
 
@@ -92,22 +92,24 @@ function App() {
         </div>
       )}
 
-      {/* Warning to use landscape mode */}
-      <div className="popups rotate-device-overlay" style={{zIndex: 9999, ...parchmentBg}}>
-          <div className="popup">
-          <section className="popup-data" style={{fontSize: "30px"}}>
-              <div className="popup-text" style={{textAlign: "center"}}>
-                  This game can only be played in landscape mode. 
+      {/* Warning to use landscape mode (rotatable devices only, not desktop) */}
+      {!isDesktop && (
+        <div className="popups rotate-device-overlay" style={{zIndex: 9999, ...parchmentBg}}>
+            <div className="popup">
+            <section className="popup-data" style={{fontSize: "30px"}}>
+                <div className="popup-text" style={{textAlign: "center"}}>
+                    This game can only be played in landscape mode.
 
-              </div>
-              <div className="popup-text" style={{textAlign: "center"}}>
-                  Please rotate your device to continue!
-                  
-              </div>
-          </section>
-          
+                </div>
+                <div className="popup-text" style={{textAlign: "center"}}>
+                    Please rotate your device to continue!
+
+                </div>
+            </section>
+
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Loading screen */}
       <AnimatePresence>
