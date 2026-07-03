@@ -72,14 +72,3 @@ body {
     display: flex;
   }
 }
-
-.unsupported-device-overlay {
-  display: none;
-}
-
-/* Show when the device's shorter side is phone-sized (matches in both orientations) */
-@media (max-width: 1000px), (max-height: 1000px) {
-  .unsupported-device-overlay {
-    display: flex;
-  }
-}
