@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { isMobileOnly, isDesktop } from 'react-device-detect'
 import { LevelContext } from './components/Context'
 import {  AnimatePresence, motion } from 'framer-motion'
+import { Analytics } from '@vercel/analytics/react'
 
 import ChineseRoom from './components/room/ChineseRoom'
 import Desk from './components/desk/Desk'
@@ -168,6 +169,7 @@ function App() {
         <Desk />
       </LevelContext>
 
+      <Analytics />
     </>
   )
 }
